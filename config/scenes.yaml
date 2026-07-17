@@ -1,0 +1,106 @@
+# Mapa de escenas v1 (2026-07-14) — figura: docs/escenas_borrador.png
+# (regenerar con: python3 docs/make_scenes_map.py)
+#
+# Criterios:
+# - Una escena por pais; paises chicos agrupados (centroamerica, antillas, guayanas).
+# - Paises gigantes partidos en sub-escenas regionales (brasil x4, mexico x2,
+#   cono sur x3 con patagonia compartida entre Chile y Argentina).
+# - bbox [W, S, E, N] en grados enteros: 1 grado de margen en fronteras
+#   terrestres, extendido 3-5 grados mar adentro donde hay costa (la misma
+#   escena sirve para variables de tierra y de mar).
+# - Escenas "indice" solo para fenomenos lejos de toda costa (nino34).
+#   Nino 1+2 queda dentro de la escena peru.
+scenes:
+  mexico_norte:
+    num: 1
+    type: pais
+    bbox: [-122, 20, -96, 35]
+  mexico_sur:
+    num: 2
+    type: pais
+    bbox: [-107, 13, -84, 23]
+  centroamerica:
+    num: 3
+    type: grupo
+    bbox: [-95, 4, -76, 19]
+    description: Guatemala a Panama, con ambas costas
+  antillas_mayores:
+    num: 4
+    type: grupo
+    bbox: [-86, 15, -63, 28]
+    description: Cuba, Jamaica, La Espanola, Puerto Rico y Bahamas
+  antillas_menores:
+    num: 5
+    type: grupo
+    bbox: [-66, 8, -56, 20]
+    description: arco desde Islas Virgenes hasta Trinidad y Barbados
+  colombia:
+    num: 6
+    type: pais
+    bbox: [-84, -5, -66, 15]
+    description: con sus costas Pacifico y Caribe
+  venezuela:
+    num: 7
+    type: pais
+    bbox: [-74, 0, -58, 14]
+  guayanas:
+    num: 8
+    type: grupo
+    bbox: [-62, 1, -48, 10]
+    description: Guyana, Surinam y Guayana Francesa
+  ecuador_galapagos:
+    num: 9
+    type: pais
+    bbox: [-95, -6, -74, 3]
+    description: incluye Galapagos
+  peru:
+    num: 10
+    type: pais
+    bbox: [-90, -20, -68, 1]
+    description: mar hasta 90W (zona de pesca; incluye region Nino 1+2)
+  bolivia:
+    num: 11
+    type: pais
+    bbox: [-71, -24, -56, -9]
+  brasil_amazonia:
+    num: 12
+    type: region
+    bbox: [-74, -14, -49, 6]
+  brasil_nordeste:
+    num: 13
+    type: region
+    bbox: [-49, -18, -32, 0]
+  brasil_centro_sudeste:
+    num: 14
+    type: region
+    bbox: [-62, -26, -38, -14]
+  brasil_sur:
+    num: 15
+    type: region
+    bbox: [-58, -34, -46, -22]
+  paraguay:
+    num: 16
+    type: pais
+    bbox: [-64, -28, -53, -18]
+  uruguay:
+    num: 17
+    type: pais
+    bbox: [-60, -38, -50, -29]
+  chile_norte_centro:
+    num: 18
+    type: region
+    bbox: [-77, -40, -66, -17]
+  argentina_norte:
+    num: 19
+    type: region
+    bbox: [-70, -43, -52, -21]
+  patagonia:
+    num: 20
+    type: region
+    bbox: [-77, -57, -56, -40]
+    description: sur de Chile y Argentina, compartida
+  nino34:
+    num: 21
+    type: indice
+    bbox: [-170, -5, -120, 5]
+    description: region Nino 3.4, de donde sale el ONI

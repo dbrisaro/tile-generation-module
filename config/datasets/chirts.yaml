@@ -1,0 +1,15 @@
+name: chirts
+version: v1.0
+description: CHIRTS-daily v1.0 — global daily Tmax/Tmin, 0.05°, fixed archive 1983–2016 (UCSB CHC)
+source: http_geotiff
+temporal: daily
+start: 1983-01-01
+end: 2016-12-31
+nodata: -9999
+variables:
+  tmax:
+    url: "https://data.chc.ucsb.edu/products/CHIRTSdaily/v1.0/global_tifs_p05/Tmax/{year}/Tmax.{year}.{month:02d}.{day:02d}.tif"
+    units: degC
+  tmin:
+    url: "https://data.chc.ucsb.edu/products/CHIRTSdaily/v1.0/global_tifs_p05/Tmin/{year}/Tmin.{year}.{month:02d}.{day:02d}.tif"
+    units: degC

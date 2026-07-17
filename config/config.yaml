@@ -1,0 +1,30 @@
+# Global settings for the tile generation pipeline.
+
+s3:
+  bucket: suyana-tiles
+  prefix: ""            # optional key prefix inside the bucket
+  region: us-east-1
+
+output:
+  format: zarr          # zarr = cubos para series de tiempo; cog = mapas por fecha
+
+# Las escenas (una por pais/region, ver docs/escenas_borrador.png) se
+# definen en scenes.yaml. Un store Zarr por (dataset, escena):
+#   s3://suyana-tiles/{dataset}/{version}/{escena}.zarr
+
+zarr:
+  time_chunk: 365       # 1 year per chunk: point series read ~1 object per year
+  spatial_chunk: 128    # pixels per chunk side
+
+grid:
+  tile_size_deg: 10     # MERIT/GHSL-style fixed grid; tiles named by lower-left corner (s20w080)
+
+runtime:
+  workdir: /home/jupyter-daniela/tile_generation_module/.work
+  workers: 6            # parallel granule downloads (HTTP sources only)
+  keep_local: false     # keep downloaded source files after tiling
+
+cog:
+  compress: DEFLATE
+  blocksize: 256
+  overview_resampling: average

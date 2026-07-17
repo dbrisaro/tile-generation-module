@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tilegen"
+version = "0.1.0"
+description = "Download climate datasets (ERA5, CHIRPS, CHIRTS, ...) and publish them to S3 as a fixed tile grid of COGs"
+requires-python = ">=3.10"
+dependencies = [
+    "boto3",
+    "click",
+    "pyyaml",
+    "pydantic>=2",
+    "requests",
+    "rasterio>=1.3",
+    "rioxarray",
+    "xarray",
+    "netcdf4",
+    "cdsapi",
+    "zarr>=2.18",  # the EDH mirror needs zarr>=3 (Python >=3.11); zarr 2.x still works for CDS/CHIRPS
+    "aiohttp",
+    "s3fs",
+    "fsspec",
+    "dask",
+    "pandas",
+]
+
+[project.scripts]
+tilegen = "tilegen.cli:cli"
+
+[tool.setuptools.packages.find]
+include = ["tilegen*"]

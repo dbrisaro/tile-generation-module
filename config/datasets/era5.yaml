@@ -1,0 +1,30 @@
+name: era5
+version: daily-stats
+description: ERA5 single-levels daily statistics, 0.25° global (Copernicus CDS, ~/.cdsapirc required)
+source: era5_cds      # default; backfills can use the EDH mirror with --source era5_edh
+temporal: daily
+start: 1940-01-01
+lag_days: 6           # ERA5T is available ~5 days behind real time
+cds_dataset: derived-era5-single-levels-daily-statistics
+edh_store: https://api.earthdatahub.destine.eu/era5/era5-single-levels-atmosphere-daily-utc-v0.zarr
+edh_hourly_store: https://api.earthdatahub.destine.eu/era5/era5-single-levels-atmosphere-v0.zarr
+variables:
+  t2m_mean:
+    cds_variable: 2m_temperature
+    daily_statistic: daily_mean
+    edh_variable: t2m
+    units: K
+  t2m_max:
+    cds_variable: 2m_temperature
+    daily_statistic: daily_maximum
+    # daily EDH store has no maxima -> aggregate the hourly store locally
+    edh_hourly_variable: t2m
+    edh_hourly_statistic: max
+    units: K
+  precip_sum:
+    cds_variable: total_precipitation
+    daily_statistic: daily_sum
+    # daily EDH store has no accumulated vars -> aggregate the hourly store locally
+    edh_hourly_variable: tp
+    edh_hourly_statistic: sum
+    units: m

@@ -1,0 +1,13 @@
+name: chirps
+version: v2.0
+description: CHIRPS v2.0 — global daily precipitation, 0.05°, 50S–50N (UCSB CHC)
+source: http_geotiff
+temporal: daily
+start: 1981-01-01
+lag_days: 45          # final product is published with ~1.5 months of delay
+nodata: -9999
+variables:
+  precip:
+    url: "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_daily/tifs/p05/{year}/chirps-v2.0.{year}.{month:02d}.{day:02d}.tif.gz"
+    gzip: true
+    units: mm/day

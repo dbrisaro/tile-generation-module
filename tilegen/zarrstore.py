@@ -44,6 +44,7 @@ class ZarrStore:
         self.uri = f"{base}/{scene}.zarr"
         self.ledger_base = f"{base}/_ledger/{scene}"
         self.fs = fsspec.get_mapper(self.uri).fs
+        self._grid = None  # (lat, lon) cached on first align; never changes
 
     # --- store ------------------------------------------------------------
     def mapper(self):
@@ -116,13 +117,32 @@ class ZarrStore:
 
     def write(self, da: xr.DataArray, variable: str, d: dt.date) -> None:
         """Idempotent region-write of one day of one variable."""
-        ds = da.expand_dims(time=[np.datetime64(d, "ns")]).to_dataset(name=variable)
-        ds.to_zarr(self.mapper(), region="auto", consolidated=True)
+        self.write_batch(da.expand_dims(time=[np.datetime64(d, "ns")]), variable)
+
+    def write_batch(self, da: xr.DataArray, variable: str) -> None:
+        """Idempotent region-write of many days of one variable at once.
+
+        `da` carries a ``time`` dim whose values all fall on the store's axis.
+        A region write only fills pre-allocated chunks — it never changes the
+        store's structure — so the consolidated index is left untouched;
+        re-consolidating on every write is what made the day-by-day path slow.
+        ``region="auto"`` needs a contiguous slice along time, so the days are
+        split into consecutive-date runs and each run is written in one call.
+        """
+        da = da.sortby("time")
+        times = pd.DatetimeIndex(da["time"].values)
+        gaps = np.diff(times.values).astype("timedelta64[D]") > np.timedelta64(1, "D")
+        breaks = np.flatnonzero(gaps) + 1
+        for run in np.split(np.arange(times.size), breaks):
+            (da.isel(time=run).to_dataset(name=variable)
+               .to_zarr(self.mapper(), region="auto", consolidated=False))
 
     def align(self, da: xr.DataArray) -> xr.DataArray:
         """Check the asset grid matches the store grid; snap coords exactly."""
-        with xr.open_zarr(self.mapper(), consolidated=True) as ds:
-            lat, lon = ds["latitude"].values, ds["longitude"].values
+        if self._grid is None:
+            with xr.open_zarr(self.mapper(), consolidated=True) as ds:
+                self._grid = (ds["latitude"].values, ds["longitude"].values)
+        lat, lon = self._grid
         if da.sizes["latitude"] != lat.size or da.sizes["longitude"] != lon.size \
                 or not np.allclose(da["latitude"], lat, atol=1e-6) \
                 or not np.allclose(da["longitude"], lon, atol=1e-6):

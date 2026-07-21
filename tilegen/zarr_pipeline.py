@@ -13,6 +13,9 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
 
+import numpy as np
+import xarray as xr
+
 from .assets import asset_to_dataarray
 from .config import DatasetCfg, GlobalCfg
 from .sources import SOURCES
@@ -107,13 +110,16 @@ class ZarrPipeline:
                         stats["missing_at_source"] += len(granule.dates)
                     log.warning("not available at source: %s (%s)", granule.key, exc)
                     return
-                written = []
+                written, das = [], []
                 for asset in assets:
                     da = asset_to_dataarray(asset, self.dcfg, self.bbox)
-                    with self._wlock:
-                        da = self.store.align(da)
-                        self.store.write(da, asset.variable, asset.date)
+                    das.append(da.expand_dims(time=[np.datetime64(asset.date, "ns")]))
                     written.append(asset.date)
+                if das:
+                    batch = xr.concat(das, dim="time")
+                    with self._wlock:
+                        batch = self.store.align(batch)
+                        self.store.write_batch(batch, granule.variable)
                 fetched = {a.date for a in assets}
                 self.store.update_ledger(granule.variable, written=written,
                                          missing=set(granule.dates) - fetched)

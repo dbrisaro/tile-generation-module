@@ -289,6 +289,89 @@ def verify(config_dir, dataset, variables, scene_names, fmt):
                        + (" ..." if len(gaps) > 10 else ""))
 
 
+@cli.command()
+@click.option("-d", "--dataset", default=None,
+              help="Restrict to one dataset (default: all configured).")
+@click.option("--format", "fmt", type=click.Choice(["zarr", "cog"]), default=None)
+@click.pass_obj
+def catalog(config_dir, dataset, fmt):
+    """Compact roll-up of every dataset/variable: config + real S3 coverage.
+
+    One line per (dataset, variable): the configured range and grid resolution,
+    then how many of the configured scenes are complete / partial / empty in S3,
+    and the span of dates actually present. The high-level companion to
+    'verify', which lists the per-scene detail.
+    """
+    import datetime as dt
+
+    from .utils import daterange
+    from .zarrstore import ZarrStore
+
+    gcfg = load_global(config_dir)
+    if (fmt or gcfg.output.format) != "zarr":
+        raise click.UsageError("catalog sólo soporta el formato zarr")
+    hoy = dt.date.today()
+    all_scenes = load_scenes(config_dir)
+
+    def _resolucion(dcfg):
+        """Deriva la resolución (grados) del primer store que exista."""
+        import xarray as xr
+        for name in all_scenes:
+            store = ZarrStore(gcfg, dcfg, name, local_only=False, out_dir=None)
+            if store.exists():
+                with xr.open_zarr(store.mapper(), consolidated=True) as ds:
+                    return f"{abs(float(ds.latitude[1] - ds.latitude[0])):.2f}°"
+        return "?"
+
+    def _estado_escena(store, dcfg, v):
+        """Clasifica una (escena, variable) en ok | parcial | vacío (ver verify)."""
+        led = store.read_ledger(v)
+        w = led["written"]
+        if not w:
+            return "vacio", None, None
+        d0, d1 = dt.date.fromisoformat(w[0]), dt.date.fromisoformat(w[-1])
+        gaps = {str(d) for d in daterange(d0, d1)} - set(w) - set(led["missing"])
+        atraso = (hoy - dt.timedelta(days=dcfg.lag_days) - d1).days
+        return ("ok" if not gaps and atraso <= 90 else "parcial"), w[0], w[-1]
+
+    click.echo()
+    click.secho("Leyenda: ✔ completo y al día · ⚠ parcial/atrasado · ✗ sin datos "
+                "(nino34 es índice oceánico: sin CHIRPS/CHIRTS)", dim=True)
+    for dsname in ([dataset] if dataset else list_datasets(config_dir)):
+        dcfg = load_dataset(config_dir, dsname)
+        rango = f"{dcfg.start} → {dcfg.end or 'hoy'}"
+        click.echo()
+        click.secho(f"{dsname}/{dcfg.version}  ·  {rango}  ·  {_resolucion(dcfg)}", bold=True)
+        if dcfg.description:
+            click.secho(f"  {dcfg.description}", dim=True)
+        ancho = max(len(v) for v in dcfg.variables)
+        for v in dcfg.variables:
+            c, lo, hi = Counter(), None, None
+            for name, scfg in all_scenes.items():
+                store = ZarrStore(gcfg, dcfg, name, local_only=False, out_dir=None)
+                st, a, b = _estado_escena(store, dcfg, v)
+                # una escena índice oceánica sin store no aplica a este dataset
+                # (p.ej. nino34 no tiene CHIRPS/CHIRTS) — no la contamos como falta
+                if st == "vacio" and scfg.type == "indice" and not store.exists():
+                    st = "na"
+                c[st] += 1
+                lo = a if a and (lo is None or a < lo) else lo
+                hi = b if b and (hi is None or b > hi) else hi
+            aplica = c["ok"] + c["parcial"] + c["vacio"]
+            if c["ok"] == aplica:
+                estado = click.style("completo", fg="green")
+            elif c["ok"] or c["parcial"]:
+                estado = click.style("en progreso", fg="yellow")
+            else:
+                estado = click.style("pendiente", fg="red")
+            span = click.style(f"  {lo} → {hi}", dim=True) if lo else ""
+            click.echo(f"  {v:<{ancho}}  "
+                       + click.style(f"✔{c['ok']:>2}", fg="green") + "  "
+                       + click.style(f"⚠{c['parcial']:>2}", fg="yellow") + "  "
+                       + click.style(f"✗{c['vacio']:>2}", fg="red")
+                       + f"  de {aplica} zonas  [{estado}]" + span)
+
+
 @cli.command("init-bucket")
 @click.pass_obj
 def init_bucket(config_dir):

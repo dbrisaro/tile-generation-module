@@ -1,0 +1,15 @@
+name: chirps
+version: v3.0
+description: CHIRPS v3.0 — global daily precipitation, 0.05°, 60S–60N (UCSB CHC). Dos productos diarios que reparten los totales pentadales a días — rnl (basado en ERA5, histórico consistente 1981+) y sat (basado en NASA IMERG, 2000+).
+source: http_geotiff
+temporal: daily
+start: 1981-01-01
+lag_days: 45          # el producto "final" se publica con ~1.5 meses de retraso
+nodata: -9999
+variables:
+  precip_rnl:
+    url: "https://data.chc.ucsb.edu/products/CHIRPS/v3.0/daily/final/rnl/{year}/chirps-v3.0.rnl.{year}.{month:02d}.{day:02d}.tif"
+    units: mm/day
+  precip_sat:
+    url: "https://data.chc.ucsb.edu/products/CHIRPS/v3.0/daily/final/sat/{year}/chirps-v3.0.sat.{year}.{month:02d}.{day:02d}.tif"
+    units: mm/day

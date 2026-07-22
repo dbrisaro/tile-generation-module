@@ -61,8 +61,9 @@ class Era5EdhSource(DataSource):
             return "daily", vcfg.edh_variable, None
         if getattr(vcfg, "edh_hourly_variable", None):
             stat = getattr(vcfg, "edh_hourly_statistic", None)
-            if stat not in ("max", "sum"):
-                raise ValueError(f"{v}: edh_hourly_statistic must be 'max' or 'sum'")
+            if stat not in ("max", "sum", "mean"):
+                raise ValueError(
+                    f"{v}: edh_hourly_statistic must be 'max', 'sum' or 'mean'")
             return "hourly", vcfg.edh_hourly_variable, stat
         return None
 
@@ -138,7 +139,12 @@ class Era5EdhSource(DataSource):
         t = pd.DatetimeIndex(da[tdim].values)
         label = (t - pd.Timedelta(hours=1)).floor("D") if stat == "sum" else t.floor("D")
         da = da.assign_coords({tdim: label}).rename({tdim: "time"})
-        agg = da.groupby("time").max() if stat == "max" else da.groupby("time").sum()
+        if stat == "max":
+            agg = da.groupby("time").max()
+        elif stat == "mean":
+            agg = da.groupby("time").mean()
+        else:  # sum (acumulados: ventana 01:00 D .. 00:00 D+1, ver arriba)
+            agg = da.groupby("time").sum()
         full = [d for d, n in label.value_counts().items() if n == 24]
         if len(full) < agg.sizes["time"]:
             log.warning("%s: dropping %d day(s) without all 24 hours in the store",

@@ -28,3 +28,11 @@ variables:
     edh_hourly_variable: tp
     edh_hourly_statistic: sum
     units: m
+  swvl1:
+    # volumetric soil water layer 1 (soil moisture, 0-7cm). Only in the hourly
+    # EDH store -> daily MEAN aggregated locally. No cds_variable on purpose:
+    # the daily cron (era5_cds) lists the atmospheric vars explicitly and skips
+    # this one; swvl1 rides the EDH mirror's monthly updates.
+    edh_hourly_variable: swvl1
+    edh_hourly_statistic: mean
+    units: m3 m-3

@@ -1,0 +1,21 @@
+name: cfs
+version: operational-analysis
+description: CFS operational analysis (CFSv2), ~0.2° global (NOAA NCEI). Media diaria del análisis 6-horario (step=0). tmp2m + viento en componentes separadas u10m/v10m.
+source: cfs_ncei
+temporal: daily
+start: 2011-04-01     # CFSv2 operational analysis time-series comienza aquí (CFSR 1979–2011 es otro producto)
+lag_days: 30          # se publica por mes completo con retraso; meses parciales dan 404 -> se saltean solos
+base_url: https://www.ncei.noaa.gov/data/climate-forecast-system/access/operational-analysis/time-series
+variables:
+  tmp2m:
+    source_file: tmp2m    # {base_url}/{Y}/{YYYYMM}/tmp2m.gdas.{YYYYMM}.grib2
+    grib_variable: t2m
+    units: K
+  u10m:
+    source_file: wnd10m   # wnd10m.gdas.* trae u10 y v10 juntos -> se baja una vez
+    grib_variable: u10
+    units: m s-1
+  v10m:
+    source_file: wnd10m
+    grib_variable: v10
+    units: m s-1

@@ -66,10 +66,24 @@ class CfsNceiSource(DataSource):
                 url = f"{self.cfg.base_url}/{y}/{ym}/{source_file}.gdas.{ym}.grib2"
                 tmp = dst.with_name(dst.name + ".part")
                 log.info("downloading %s", url)
-                r = subprocess.run(["curl", "-sS", "-f", "-o", str(tmp), url])
-                if r.returncode != 0 or not tmp.exists():
+                # No -f: keep the response so we can read the HTTP status. curl
+                # retries transient failures itself (429/5xx, connection resets)
+                # with exponential backoff — NCEI throttles parallel big pulls.
+                r = subprocess.run(
+                    ["curl", "-sS", "-o", str(tmp), "-w", "%{http_code}",
+                     "--retry", "6", "--retry-connrefused", "--connect-timeout", "60",
+                     url],
+                    capture_output=True, text=True)
+                code = (r.stdout or "").strip()[-3:]
+                if code == "404":                # genuinely not published -> skip
                     tmp.unlink(missing_ok=True)
                     raise FileNotFoundError(url)
+                if r.returncode != 0 or code != "200" or not tmp.exists():
+                    # transient (throttle/5xx/timeout): raise a NON-FileNotFound error
+                    # so the pipeline logs it as a retryable failure, NOT as missing.
+                    tmp.unlink(missing_ok=True)
+                    raise RuntimeError(
+                        f"download failed (rc={r.returncode} http={code or '???'}): {url}")
                 tmp.rename(dst)
                 log.info("downloaded %s (%.0f MB)", dst.name, dst.stat().st_size / 1e6)
         return dst

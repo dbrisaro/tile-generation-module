@@ -1,0 +1,18 @@
+name: cfsr
+version: reanalysis
+description: CFSR (Climate Forecast System Reanalysis), ~0.31° global (NCAR GDEX, series horarias d093001). Media diaria sobre las 24 horas del día (ventana 01:00 D .. 00:00 D+1 UTC). Es el histórico 1979–2010 que precede al operational analysis del dataset cfs (2011+, ~0.20°) — grillas distintas, por eso son datasets separados.
+source: cfsr_gdex
+temporal: daily
+start: 1979-01-01
+end: 2010-12-31       # archivo cerrado: CFSR termina en 2010-12; 2011+ es cfs
+lag_days: 0
+base_url: https://data.gdex.ucar.edu/d093001
+variables:
+  u10m:
+    source_file: wnd10m   # wnd10m.gdas.*.grb2 trae u10 y v10 juntos -> se baja y decodifica 1 vez
+    grib_variable: u10
+    units: m s-1
+  v10m:
+    source_file: wnd10m
+    grib_variable: v10
+    units: m s-1

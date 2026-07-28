@@ -42,10 +42,8 @@ class CfsNceiSource(DataSource):
         self._guard = threading.Lock()
 
     # -- helpers ---------------------------------------------------------
-    def _prep(self, da):
-        """step=0 (analysis), lon 0..360 -> -180..180, crop to bbox. Lazy."""
-        if "step" in da.dims:
-            da = da.isel(step=0)         # analysis, not forecast
+    def _crop_lonlat(self, da):
+        """lon 0..360 -> -180..180, crop to bbox. Lazy."""
         da = da.assign_coords(
             longitude=(((da.longitude + 180) % 360) - 180)).sortby("longitude")
         if self.area is not None:
@@ -54,16 +52,32 @@ class CfsNceiSource(DataSource):
                         latitude=slice(maxy, miny))   # latitude descending
         return da
 
+    def _prep(self, da):
+        """step=0 (analysis), lon 0..360 -> -180..180, crop to bbox. Lazy."""
+        if "step" in da.dims:
+            da = da.isel(step=0)         # analysis, not forecast
+        return self._crop_lonlat(da)
+
     def _grib_lock(self, name):
         with self._guard:
             return self._grib_locks.setdefault(name, threading.Lock())
 
-    def _download_grib(self, source_file, y, m):
+    # Layout of the archive, overridden by sibling products (e.g. CFSR on GDEX
+    # has no YYYYMM directory level and uses the .grb2 extension).
+    grib_suffix = "grib2"
+
+    def _grib_name(self, source_file, y, m):
+        return f"{source_file}.gdas.{y}{m:02d}.{self.grib_suffix}"
+
+    def _grib_url(self, source_file, y, m):
         ym = f"{y}{m:02d}"
-        dst = self.workdir / f"{source_file}.gdas.{ym}.grib2"
+        return f"{self.cfg.base_url}/{y}/{ym}/{self._grib_name(source_file, y, m)}"
+
+    def _download_grib(self, source_file, y, m):
+        dst = self.workdir / self._grib_name(source_file, y, m)
         with self._grib_lock(dst.name):          # sibling var reuses, never re-downloads
             if not dst.exists():
-                url = f"{self.cfg.base_url}/{y}/{ym}/{source_file}.gdas.{ym}.grib2"
+                url = self._grib_url(source_file, y, m)
                 tmp = dst.with_name(dst.name + ".part")
                 log.info("downloading %s", url)
                 # No -f: keep the response so we can read the HTTP status. curl
@@ -87,6 +101,12 @@ class CfsNceiSource(DataSource):
                 tmp.rename(dst)
                 log.info("downloaded %s (%.0f MB)", dst.name, dst.stat().st_size / 1e6)
         return dst
+
+    def _nc_target(self, v, y, m):
+        """Per-month daily cache. The bbox is part of the name: the same month
+        cropped to another scene is a different file."""
+        tag = "" if self.area is None else "_" + "_".join(str(int(x)) for x in self.area)
+        return self.workdir / f"{self.cfg.name}_{v}_{y}{m:02d}{tag}.nc"
 
     def _release_grib(self, grib, v, source_file, y, m):
         """Mark this var's month done; drop the shared GRIB when no sibling needs it."""
@@ -115,10 +135,9 @@ class CfsNceiSource(DataSource):
         vcfg = self.cfg.variables[v]
         source_file, gvar = vcfg.source_file, vcfg.grib_variable
         y, m = granule.dates[0].year, granule.dates[0].month
-        tag = "" if self.area is None else "_" + "_".join(str(int(x)) for x in self.area)
-        target = self.workdir / f"cfs_{v}_{y}{m:02d}{tag}.nc"
+        target = self._nc_target(v, y, m)
 
-        grib = self.workdir / f"{source_file}.gdas.{y}{m:02d}.grib2"
+        grib = self.workdir / self._grib_name(source_file, y, m)
         if not target.exists():
             grib = self._download_grib(source_file, y, m)
             with nc_lock:  # cfgrib/eccodes C layer is not thread-safe

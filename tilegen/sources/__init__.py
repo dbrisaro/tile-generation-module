@@ -1,6 +1,7 @@
 """Source registry: maps the ``source:`` field of a dataset YAML to a class."""
 
 from .cfs import CfsNceiSource
+from .cfsr import CfsrGdexSource
 from .edh import Era5EdhSource
 from .era5 import Era5CdsSource
 from .http_geotiff import HttpGeotiffSource
@@ -10,4 +11,5 @@ SOURCES = {
     "era5_cds": Era5CdsSource,
     "era5_edh": Era5EdhSource,
     "cfs_ncei": CfsNceiSource,
+    "cfsr_gdex": CfsrGdexSource,
 }

@@ -4,11 +4,17 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tilegen"
-version = "0.1.0"
+version = "0.2.0"
 description = "Download climate datasets (ERA5, CHIRPS, CHIRTS, ...) and publish them to S3 as a fixed tile grid of COGs"
 requires-python = ">=3.10"
+# Los lower bounds de la familia S3 no son decorativos: sin ellos pip resuelve
+# s3fs 0.4.2 (2020, pre-async). boto3 sin cota baja arrastra un botocore nuevo
+# que choca con el rango que pide aiobotocore, y el resolver camina s3fs hacia
+# atrás hasta que algo encaje — sin error ni warning. Combinación conocida buena
+# en ~/tilegen-prod/repo-requirements-lock.txt.
 dependencies = [
-    "boto3",
+    "boto3>=1.34",
+    "botocore>=1.34",
     "click",
     "pyyaml",
     "pydantic>=2",
@@ -20,8 +26,8 @@ dependencies = [
     "cdsapi",
     "zarr>=2.18",  # the EDH mirror needs zarr>=3 (Python >=3.11); zarr 2.x still works for CDS/CHIRPS
     "aiohttp",
-    "s3fs",
-    "fsspec",
+    "s3fs>=2024.6.0",
+    "fsspec>=2024.6.0",
     "dask",
     "pandas",
 ]
@@ -31,3 +37,8 @@ tilegen = "tilegen.cli:cli"
 
 [tool.setuptools.packages.find]
 include = ["tilegen*"]
+
+# Los YAML de configuración viven en tilegen/conf/ para que viajen dentro del
+# wheel; `config/` en la raíz del repo es un symlink a ese directorio.
+[tool.setuptools.package-data]
+tilegen = ["conf/*.yaml", "conf/datasets/*.yaml"]

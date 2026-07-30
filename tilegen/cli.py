@@ -20,7 +20,10 @@ from .s3io import S3Store
 from .utils import setup_logging
 from .zarr_pipeline import ZarrPipeline
 
-CONFIG_DIR = Path(__file__).resolve().parents[1] / "config"
+# Dentro del paquete a propósito: así el default funciona igual en un install
+# editable y en uno normal (antes apuntaba a ../config, que no existe dentro de
+# site-packages y dejaba al CLI sin poder listar ni un dataset).
+CONFIG_DIR = Path(__file__).resolve().parent / "conf"
 
 
 @click.group()

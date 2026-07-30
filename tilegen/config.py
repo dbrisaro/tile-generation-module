@@ -1,8 +1,10 @@
 """Configuration models (pydantic) and YAML loaders.
 
-Global settings live in ``config/config.yaml``; each dataset is a YAML file
-under ``config/datasets/``. Dataset files may carry source-specific extra
-fields (url templates, CDS request params) — models allow extras.
+Global settings live in ``tilegen/conf/config.yaml``; each dataset is a YAML
+file under ``tilegen/conf/datasets/``. (``config/`` in the repo root is a
+symlink to ``tilegen/conf``, so both paths work.) Dataset files may carry
+source-specific extra fields (url templates, CDS request params) — models
+allow extras.
 """
 from __future__ import annotations
 

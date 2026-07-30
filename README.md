@@ -91,10 +91,27 @@ Escenas definidas en `config/scenes.yaml` (21 escenas: ver
 
 ## Instalación
 
+Para desarrollar:
+
 ```bash
 cd ~/tile_generation_module
 pip install -e .
 ```
+
+Para usarlo desde otro entorno (no hace falta clonar):
+
+```bash
+python -m venv .venv && . .venv/bin/activate
+pip install "git+https://github.com/dbrisaro/tile-generation-module.git@v0.2.0"
+```
+
+Conviene instalar en un venv propio y no en `~/.local`: los lower bounds de
+`s3fs`/`boto3` son estrictos a propósito y pueden pelearse con lo que ya haya
+en un entorno compartido. Combinación exacta que corre en producción:
+`~/tilegen-prod/repo-requirements-lock.txt`.
+
+**Solo lectura de los cubos publicados no necesita tilegen** — alcanza con
+`xarray` + `s3fs`: `xr.open_zarr("s3://suyana-tiles/era5/daily-stats/peru.zarr")`.
 
 Credenciales: `~/.aws` o rol de instancia para S3; `~/.cdsapirc` para ERA5.
 
@@ -183,18 +200,19 @@ también rellena días publicados tarde:
 ## Estructura del código
 
 ```
-config/config.yaml          bucket, chunks zarr, opciones COG
-config/scenes.yaml          el mapa de escenas (21 rectángulos con nombre)
-config/datasets/*.yaml      un YAML por dataset (URL/CDS, variables, fechas, nodata)
-tilegen/config.py           modelos pydantic + carga de YAML
-tilegen/sources/            adaptadores por fuente (http_geotiff, era5_cds, era5_edh)
-tilegen/assets.py           normaliza cualquier fuente a DataArray (lat, lon, float32, NaN)
-tilegen/zarrstore.py        el cubo: creación, escritura por día, ledger
-tilegen/zarr_pipeline.py    plan -> fetch -> write (formato zarr)
-tilegen/grid.py             grilla de tiles fijos estilo MERIT (formato cog)
-tilegen/tiler.py            corte a COG (formato cog)
-tilegen/pipeline.py         plan -> fetch -> tile -> upload (formato cog)
-tilegen/s3io.py             S3: bucket, listados, uploads con retry
-tilegen/cli.py              comandos tilegen
-tests/test_grid.py          tests de la grilla
+config -> tilegen/conf         symlink de conveniencia (las rutas `config/...` siguen valiendo)
+tilegen/conf/config.yaml       bucket, chunks zarr, opciones COG
+tilegen/conf/scenes.yaml       el mapa de escenas (21 rectángulos con nombre)
+tilegen/conf/datasets/*.yaml   un YAML por dataset (URL/CDS, variables, fechas, nodata)
+tilegen/config.py              modelos pydantic + carga de YAML
+tilegen/sources/               adaptadores por fuente (http_geotiff, era5_cds, era5_edh)
+tilegen/assets.py              normaliza cualquier fuente a DataArray (lat, lon, float32, NaN)
+tilegen/zarrstore.py           el cubo: creación, escritura por día, ledger
+tilegen/zarr_pipeline.py       plan -> fetch -> write (formato zarr)
+tilegen/grid.py                grilla de tiles fijos estilo MERIT (formato cog)
+tilegen/tiler.py               corte a COG (formato cog)
+tilegen/pipeline.py            plan -> fetch -> tile -> upload (formato cog)
+tilegen/s3io.py                S3: bucket, listados, uploads con retry
+tilegen/cli.py                 comandos tilegen
+tests/test_grid.py             tests de la grilla
 ```

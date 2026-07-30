@@ -1,5 +1,7 @@
 .work/
 __pycache__/
 *.egg-info/
+build/
+dist/
 .ipynb_checkpoints/
 *.pyc

@@ -28,6 +28,17 @@ variables:
     edh_hourly_variable: tp
     edh_hourly_statistic: sum
     units: m
+  ssrd_sum:
+    # surface solar radiation downwards, daily total in J m-2 (hourly
+    # accumulations summed). Monthly irradiation is derived downstream:
+    #   kWh m-2 = sum(clip(ssrd_sum, 0, None)) / 3.6e6   over the month's days
+    # Summing the real days is exact, so no days-in-month factor is needed.
+    cds_variable: surface_solar_radiation_downwards
+    daily_statistic: daily_sum
+    # daily EDH store has no accumulated vars -> aggregate the hourly store locally
+    edh_hourly_variable: ssrd
+    edh_hourly_statistic: sum
+    units: J m-2
   swvl1:
     # volumetric soil water layer 1 (soil moisture, 0-7cm). Only in the hourly
     # EDH store -> daily MEAN aggregated locally. No cds_variable on purpose:

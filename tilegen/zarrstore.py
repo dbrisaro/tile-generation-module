@@ -115,6 +115,40 @@ class ZarrStore:
         ext.to_zarr(self.mapper(), append_dim="time", consolidated=True, **_v2_kwargs())
         log.info("extended %s through %s", self.uri, times[-1].date())
 
+    def ensure_variables(self, variables) -> None:
+        """Allocate config variables the store predates, as unwritten NaN.
+
+        ``create`` only allocates the variables the config had at creation time,
+        and ``write_batch`` uses ``region="auto"``, which fills pre-allocated
+        chunks but cannot add a variable. So a variable added to the YAML after
+        a store was built is invisible to it and writes fail with "non
+        pre-existing variables". This backfills the metadata for those.
+        """
+        import dask.array as dsa
+
+        with xr.open_zarr(self.mapper(), consolidated=True) as ds:
+            missing = [v for v in variables if v not in ds.data_vars]
+            if not missing:
+                return
+            ny, nx = ds.sizes["latitude"], ds.sizes["longitude"]
+            chunks = self._chunks(ny, nx)
+            add = xr.Dataset(
+                {v: (DIMS, dsa.full((ds.sizes["time"], ny, nx), np.nan,
+                                    chunks=chunks, dtype="float32"),
+                     {"units": self.dcfg.variables[v].units or ""})
+                 for v in missing},
+                coords={"time": ds["time"].values,
+                        "latitude": ds["latitude"].values,
+                        "longitude": ds["longitude"].values},
+                # mode="a" rewrites the group attrs from what it is handed, so
+                # carry the store's own attrs over or they would be wiped
+                attrs=dict(ds.attrs),
+            )
+            encoding = {v: {"_FillValue": np.float32(np.nan)} for v in missing}
+        add.to_zarr(self.mapper(), mode="a", compute=False, encoding=encoding,
+                    consolidated=True, **_v2_kwargs())
+        log.info("allocated %s in %s", ", ".join(missing), self.uri)
+
     def write(self, da: xr.DataArray, variable: str, d: dt.date) -> None:
         """Idempotent region-write of one day of one variable."""
         self.write_batch(da.expand_dims(time=[np.datetime64(d, "ns")]), variable)

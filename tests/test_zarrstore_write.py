@@ -110,6 +110,41 @@ def test_align_caches_grid_and_checks_mismatch(tmp_path):
         store.align(bad)
 
 
+def test_ensure_variables_adds_without_touching_existing_data(tmp_path):
+    """A variable added to the YAML after a store was built must be allocated
+    into it, leaving already-written data, the group attrs and the ledger alone.
+    """
+    store = _make_store(tmp_path)
+    store.write_batch(xr.concat([_day(0), _day(1)], dim="time"), VARIABLE)
+    store.update_ledger(VARIABLE, written=[START, START + dt.timedelta(days=1)])
+    with _reopen(store) as ds:
+        attrs_before = dict(ds.attrs)
+    assert attrs_before  # create() stamped dataset/version/scene/...
+
+    # a plain region-write of an unknown variable is what fails today
+    new = _day(0).rename("ssrd_sum").to_dataset()
+    with pytest.raises(ValueError, match="non-pre-existing"):
+        new.to_zarr(store.mapper(), region="auto", consolidated=False)
+
+    store.dcfg.variables["ssrd_sum"] = VariableCfg(units="J m-2")
+    store.ensure_variables(["ssrd_sum"])
+    store.ensure_variables(["ssrd_sum"])  # idempotent
+
+    with _reopen(store) as ds:
+        assert ds["ssrd_sum"].shape == ds[VARIABLE].shape
+        assert ds["ssrd_sum"].attrs["units"] == "J m-2"
+        assert np.isnan(ds["ssrd_sum"].values).all()   # allocated, unwritten
+        np.testing.assert_array_equal(ds[VARIABLE].isel(time=0).values, _value(0))
+        np.testing.assert_array_equal(ds[VARIABLE].isel(time=1).values, _value(1))
+        assert dict(ds.attrs) == attrs_before
+    assert store.read_ledger(VARIABLE)["written"] == ["2024-01-01", "2024-01-02"]
+
+    # and the new variable is writable afterwards
+    store.write(_day(3).isel(time=0), "ssrd_sum", START + dt.timedelta(days=3))
+    with _reopen(store) as ds:
+        np.testing.assert_array_equal(ds["ssrd_sum"].isel(time=3).values, _value(3))
+
+
 if __name__ == "__main__":
     import sys
     sys.exit(pytest.main([__file__, "-v"]))

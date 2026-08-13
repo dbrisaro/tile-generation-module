@@ -98,6 +98,9 @@ class ZarrPipeline:
         with self._wlock:
             if not self.store.exists():
                 self._create_store(plan)
+            else:
+                # the store may predate a variable added to the YAML since
+                self.store.ensure_variables(plan.variables)
             self.store.ensure_covers(plan.end)
 
         def process(granule: Granule):

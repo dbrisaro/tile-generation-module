@@ -13,9 +13,9 @@ Two stores are used, chosen per variable in the dataset YAML:
   only. Mapped with ``edh_variable`` (e.g. t2m_mean -> t2m).
 - ``edh_hourly_store`` (hourly): full hourly fields, aggregated locally to
   daily values. Mapped with ``edh_hourly_variable`` + ``edh_hourly_statistic``
-  ("max" or "sum"). Aggregation windows follow the CDS daily-statistics
-  convention (validated against CDS output, diffs at packing precision):
-  max over hours 00-23 UTC of day D; sums cover 01:00 D .. 00:00 D+1 UTC
+  ("max", "min", "mean" or "sum"). Aggregation windows follow the CDS
+  daily-statistics convention (validated against CDS output, diffs at packing
+  precision): max/min/mean over hours 00-23 UTC of day D; sums cover 01:00 D .. 00:00 D+1 UTC
   (ERA5 accumulations are stamped at the end of the hour). Days without all
   24 hours in the store are dropped rather than written incomplete.
 
@@ -61,9 +61,9 @@ class Era5EdhSource(DataSource):
             return "daily", vcfg.edh_variable, None
         if getattr(vcfg, "edh_hourly_variable", None):
             stat = getattr(vcfg, "edh_hourly_statistic", None)
-            if stat not in ("max", "sum", "mean"):
+            if stat not in ("max", "min", "sum", "mean"):
                 raise ValueError(
-                    f"{v}: edh_hourly_statistic must be 'max', 'sum' or 'mean'")
+                    f"{v}: edh_hourly_statistic must be 'max', 'min', 'sum' or 'mean'")
             return "hourly", vcfg.edh_hourly_variable, stat
         return None
 
@@ -141,6 +141,8 @@ class Era5EdhSource(DataSource):
         da = da.assign_coords({tdim: label}).rename({tdim: "time"})
         if stat == "max":
             agg = da.groupby("time").max()
+        elif stat == "min":
+            agg = da.groupby("time").min()
         elif stat == "mean":
             agg = da.groupby("time").mean()
         else:  # sum (acumulados: ventana 01:00 D .. 00:00 D+1, ver arriba)

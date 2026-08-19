@@ -21,6 +21,17 @@ variables:
     edh_hourly_variable: t2m
     edh_hourly_statistic: max
     units: K
+  t2m_min:
+    # temperatura mínima diaria = mínimo de las 24 horas del día (heladas).
+    # ERA5 no publica una mínima diaria: `mn2t` existe pero su ventana es
+    # "desde el último post-proceso", que no cae en el día calendario, así que
+    # quedaría corrida respecto de t2m_max. Se agrega desde la serie horaria,
+    # igual que la máxima.
+    cds_variable: 2m_temperature
+    daily_statistic: daily_minimum
+    edh_hourly_variable: t2m
+    edh_hourly_statistic: min
+    units: K
   precip_sum:
     cds_variable: total_precipitation
     daily_statistic: daily_sum

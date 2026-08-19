@@ -11,38 +11,38 @@ chirps,v2.0,precip,mm/day,colombia,"-84.0,-5.0,-66.0,15.0",0.05,1981-01-01,2026-
 chirps,v2.0,precip,mm/day,venezuela,"-74.0,0.0,-58.0,14.0",0.05,1981-01-01,2026-06-05,16592,0,completo,s3://suyana-tiles/chirps/v2.0/venezuela.zarr
 chirps,v2.0,precip,mm/day,guayanas,"-62.0,1.0,-48.0,10.0",0.05,1981-01-01,2026-06-05,16592,0,completo,s3://suyana-tiles/chirps/v2.0/guayanas.zarr
 chirps,v2.0,precip,mm/day,ecuador_galapagos,"-95.0,-6.0,-74.0,3.0",0.05,1981-01-01,2026-06-05,16592,0,completo,s3://suyana-tiles/chirps/v2.0/ecuador_galapagos.zarr
-chirps,v2.0,precip,mm/day,peru,"-90.0,-20.0,-68.0,1.0",0.05,1981-01-01,2026-06-28,16615,0,completo,s3://suyana-tiles/chirps/v2.0/peru.zarr
+chirps,v2.0,precip,mm/day,peru,"-90.0,-20.0,-68.0,1.0",0.05,1981-01-01,2026-07-05,16622,0,completo,s3://suyana-tiles/chirps/v2.0/peru.zarr
 chirps,v2.0,precip,mm/day,bolivia,"-71.0,-24.0,-56.0,-9.0",0.05,1981-01-01,2026-06-05,16592,0,completo,s3://suyana-tiles/chirps/v2.0/bolivia.zarr
 chirps,v2.0,precip,mm/day,brasil_amazonia,"-74.0,-14.0,-49.0,6.0",0.05,1981-01-01,2026-06-05,16592,0,completo,s3://suyana-tiles/chirps/v2.0/brasil_amazonia.zarr
 chirps,v2.0,precip,mm/day,brasil_nordeste,"-49.0,-18.0,-32.0,0.0",0.05,1981-01-01,2026-06-05,16592,0,completo,s3://suyana-tiles/chirps/v2.0/brasil_nordeste.zarr
 chirps,v2.0,precip,mm/day,brasil_centro_sudeste,"-62.0,-26.0,-38.0,-14.0",0.05,1981-01-01,2026-06-05,16592,0,completo,s3://suyana-tiles/chirps/v2.0/brasil_centro_sudeste.zarr
 chirps,v2.0,precip,mm/day,brasil_sur,"-58.0,-34.0,-46.0,-22.0",0.05,1981-01-01,2026-06-05,16592,0,completo,s3://suyana-tiles/chirps/v2.0/brasil_sur.zarr
 chirps,v2.0,precip,mm/day,paraguay,"-64.0,-28.0,-53.0,-18.0",0.05,1981-01-01,2026-06-05,16592,0,completo,s3://suyana-tiles/chirps/v2.0/paraguay.zarr
-chirps,v2.0,precip,mm/day,uruguay,"-60.0,-38.0,-50.0,-29.0",0.05,1981-01-01,2026-06-28,16615,0,completo,s3://suyana-tiles/chirps/v2.0/uruguay.zarr
+chirps,v2.0,precip,mm/day,uruguay,"-60.0,-38.0,-50.0,-29.0",0.05,1981-01-01,2026-07-05,16622,0,completo,s3://suyana-tiles/chirps/v2.0/uruguay.zarr
 chirps,v2.0,precip,mm/day,chile_norte_centro,"-77.0,-40.0,-66.0,-17.0",0.05,1981-01-01,2026-06-05,16592,0,completo,s3://suyana-tiles/chirps/v2.0/chile_norte_centro.zarr
-chirps,v2.0,precip,mm/day,argentina_norte,"-70.0,-43.0,-52.0,-21.0",0.05,1981-01-01,2026-06-28,16615,0,completo,s3://suyana-tiles/chirps/v2.0/argentina_norte.zarr
-chirps,v2.0,precip,mm/day,patagonia,"-77.0,-57.0,-56.0,-40.0",0.05,1981-01-01,2026-06-28,16615,0,completo,s3://suyana-tiles/chirps/v2.0/patagonia.zarr
-chirps-v3,v3.0,precip_rnl,mm/day,mexico_norte,"-122.0,20.0,-96.0,35.0",0.05,1981-01-01,1992-12-31,4383,0,parcial,s3://suyana-tiles/chirps-v3/v3.0/mexico_norte.zarr
-chirps-v3,v3.0,precip_rnl,mm/day,mexico_sur,"-107.0,13.0,-84.0,23.0",0.05,1981-01-01,1992-12-31,4383,0,parcial,s3://suyana-tiles/chirps-v3/v3.0/mexico_sur.zarr
-chirps-v3,v3.0,precip_rnl,mm/day,centroamerica,"-95.0,4.0,-76.0,19.0",0.05,1981-01-01,1992-12-31,4383,0,parcial,s3://suyana-tiles/chirps-v3/v3.0/centroamerica.zarr
-chirps-v3,v3.0,precip_rnl,mm/day,antillas_mayores,"-86.0,15.0,-63.0,28.0",0.05,1981-01-01,1992-12-31,4383,0,parcial,s3://suyana-tiles/chirps-v3/v3.0/antillas_mayores.zarr
-chirps-v3,v3.0,precip_rnl,mm/day,antillas_menores,"-66.0,8.0,-56.0,20.0",0.05,1981-01-01,1992-12-31,4383,0,parcial,s3://suyana-tiles/chirps-v3/v3.0/antillas_menores.zarr
-chirps-v3,v3.0,precip_rnl,mm/day,colombia,"-84.0,-5.0,-66.0,15.0",0.05,1981-01-01,1992-12-31,4383,0,parcial,s3://suyana-tiles/chirps-v3/v3.0/colombia.zarr
-chirps-v3,v3.0,precip_rnl,mm/day,venezuela,"-74.0,0.0,-58.0,14.0",0.05,1981-01-01,1992-12-31,4383,0,parcial,s3://suyana-tiles/chirps-v3/v3.0/venezuela.zarr
-chirps-v3,v3.0,precip_rnl,mm/day,guayanas,"-62.0,1.0,-48.0,10.0",0.05,1981-01-01,1992-12-31,4383,0,parcial,s3://suyana-tiles/chirps-v3/v3.0/guayanas.zarr
-chirps-v3,v3.0,precip_rnl,mm/day,ecuador_galapagos,"-95.0,-6.0,-74.0,3.0",0.05,1981-01-01,1992-12-31,4383,0,parcial,s3://suyana-tiles/chirps-v3/v3.0/ecuador_galapagos.zarr
-chirps-v3,v3.0,precip_rnl,mm/day,peru,"-90.0,-20.0,-68.0,1.0",0.05,1981-01-01,2020-01-02,4384,9862,parcial,s3://suyana-tiles/chirps-v3/v3.0/peru.zarr
-chirps-v3,v3.0,precip_sat,mm/day,peru,"-90.0,-20.0,-68.0,1.0",0.05,2020-01-01,2020-01-02,2,0,parcial,s3://suyana-tiles/chirps-v3/v3.0/peru.zarr
-chirps-v3,v3.0,precip_rnl,mm/day,bolivia,"-71.0,-24.0,-56.0,-9.0",0.05,1981-01-01,1992-12-31,4383,0,parcial,s3://suyana-tiles/chirps-v3/v3.0/bolivia.zarr
-chirps-v3,v3.0,precip_rnl,mm/day,brasil_amazonia,"-74.0,-14.0,-49.0,6.0",0.05,1981-01-01,1992-12-31,4383,0,parcial,s3://suyana-tiles/chirps-v3/v3.0/brasil_amazonia.zarr
-chirps-v3,v3.0,precip_rnl,mm/day,brasil_nordeste,"-49.0,-18.0,-32.0,0.0",0.05,1981-01-01,1992-11-26,4348,0,parcial,s3://suyana-tiles/chirps-v3/v3.0/brasil_nordeste.zarr
-chirps-v3,v3.0,precip_rnl,mm/day,brasil_centro_sudeste,"-62.0,-26.0,-38.0,-14.0",0.05,1981-01-01,1991-12-31,4017,0,parcial,s3://suyana-tiles/chirps-v3/v3.0/brasil_centro_sudeste.zarr
-chirps-v3,v3.0,precip_rnl,mm/day,brasil_sur,"-58.0,-34.0,-46.0,-22.0",0.05,1981-01-01,1991-12-31,4017,0,parcial,s3://suyana-tiles/chirps-v3/v3.0/brasil_sur.zarr
-chirps-v3,v3.0,precip_rnl,mm/day,paraguay,"-64.0,-28.0,-53.0,-18.0",0.05,1981-01-01,1991-12-31,4017,0,parcial,s3://suyana-tiles/chirps-v3/v3.0/paraguay.zarr
-chirps-v3,v3.0,precip_rnl,mm/day,uruguay,"-60.0,-38.0,-50.0,-29.0",0.05,1981-01-01,1991-12-31,4017,0,parcial,s3://suyana-tiles/chirps-v3/v3.0/uruguay.zarr
-chirps-v3,v3.0,precip_rnl,mm/day,chile_norte_centro,"-77.0,-40.0,-66.0,-17.0",0.05,1981-01-01,1991-12-31,4017,0,parcial,s3://suyana-tiles/chirps-v3/v3.0/chile_norte_centro.zarr
-chirps-v3,v3.0,precip_rnl,mm/day,argentina_norte,"-70.0,-43.0,-52.0,-21.0",0.05,1981-01-01,1991-12-31,4017,0,parcial,s3://suyana-tiles/chirps-v3/v3.0/argentina_norte.zarr
-chirps-v3,v3.0,precip_rnl,mm/day,patagonia,"-77.0,-57.0,-56.0,-40.0",0.05,1981-01-01,1991-12-31,4011,6,parcial,s3://suyana-tiles/chirps-v3/v3.0/patagonia.zarr
+chirps,v2.0,precip,mm/day,argentina_norte,"-70.0,-43.0,-52.0,-21.0",0.05,1981-01-01,2026-07-05,16622,0,completo,s3://suyana-tiles/chirps/v2.0/argentina_norte.zarr
+chirps,v2.0,precip,mm/day,patagonia,"-77.0,-57.0,-56.0,-40.0",0.05,1981-01-01,2026-07-05,16622,0,completo,s3://suyana-tiles/chirps/v2.0/patagonia.zarr
+chirps-v3,v3.0,precip_rnl,mm/day,mexico_norte,"-122.0,20.0,-96.0,35.0",0.05,1981-01-01,1992-12-31,4383,0,parcial,s3://suyana-tiles/chirps/v3.0/mexico_norte.zarr
+chirps-v3,v3.0,precip_rnl,mm/day,mexico_sur,"-107.0,13.0,-84.0,23.0",0.05,1981-01-01,1992-12-31,4383,0,parcial,s3://suyana-tiles/chirps/v3.0/mexico_sur.zarr
+chirps-v3,v3.0,precip_rnl,mm/day,centroamerica,"-95.0,4.0,-76.0,19.0",0.05,1981-01-01,1992-12-31,4383,0,parcial,s3://suyana-tiles/chirps/v3.0/centroamerica.zarr
+chirps-v3,v3.0,precip_rnl,mm/day,antillas_mayores,"-86.0,15.0,-63.0,28.0",0.05,1981-01-01,1992-12-31,4383,0,parcial,s3://suyana-tiles/chirps/v3.0/antillas_mayores.zarr
+chirps-v3,v3.0,precip_rnl,mm/day,antillas_menores,"-66.0,8.0,-56.0,20.0",0.05,1981-01-01,1992-12-31,4383,0,parcial,s3://suyana-tiles/chirps/v3.0/antillas_menores.zarr
+chirps-v3,v3.0,precip_rnl,mm/day,colombia,"-84.0,-5.0,-66.0,15.0",0.05,1981-01-01,1992-12-31,4383,0,parcial,s3://suyana-tiles/chirps/v3.0/colombia.zarr
+chirps-v3,v3.0,precip_rnl,mm/day,venezuela,"-74.0,0.0,-58.0,14.0",0.05,1981-01-01,1992-12-31,4383,0,parcial,s3://suyana-tiles/chirps/v3.0/venezuela.zarr
+chirps-v3,v3.0,precip_rnl,mm/day,guayanas,"-62.0,1.0,-48.0,10.0",0.05,1981-01-01,1992-12-31,4383,0,parcial,s3://suyana-tiles/chirps/v3.0/guayanas.zarr
+chirps-v3,v3.0,precip_rnl,mm/day,ecuador_galapagos,"-95.0,-6.0,-74.0,3.0",0.05,1981-01-01,1992-12-31,4383,0,parcial,s3://suyana-tiles/chirps/v3.0/ecuador_galapagos.zarr
+chirps-v3,v3.0,precip_rnl,mm/day,peru,"-90.0,-20.0,-68.0,1.0",0.05,1981-01-01,2020-01-02,4384,9862,parcial,s3://suyana-tiles/chirps/v3.0/peru.zarr
+chirps-v3,v3.0,precip_sat,mm/day,peru,"-90.0,-20.0,-68.0,1.0",0.05,2020-01-01,2020-01-02,2,0,parcial,s3://suyana-tiles/chirps/v3.0/peru.zarr
+chirps-v3,v3.0,precip_rnl,mm/day,bolivia,"-71.0,-24.0,-56.0,-9.0",0.05,1981-01-01,1992-12-31,4383,0,parcial,s3://suyana-tiles/chirps/v3.0/bolivia.zarr
+chirps-v3,v3.0,precip_rnl,mm/day,brasil_amazonia,"-74.0,-14.0,-49.0,6.0",0.05,1981-01-01,1992-12-31,4383,0,parcial,s3://suyana-tiles/chirps/v3.0/brasil_amazonia.zarr
+chirps-v3,v3.0,precip_rnl,mm/day,brasil_nordeste,"-49.0,-18.0,-32.0,0.0",0.05,1981-01-01,1992-11-26,4348,0,parcial,s3://suyana-tiles/chirps/v3.0/brasil_nordeste.zarr
+chirps-v3,v3.0,precip_rnl,mm/day,brasil_centro_sudeste,"-62.0,-26.0,-38.0,-14.0",0.05,1981-01-01,1991-12-31,4017,0,parcial,s3://suyana-tiles/chirps/v3.0/brasil_centro_sudeste.zarr
+chirps-v3,v3.0,precip_rnl,mm/day,brasil_sur,"-58.0,-34.0,-46.0,-22.0",0.05,1981-01-01,1991-12-31,4017,0,parcial,s3://suyana-tiles/chirps/v3.0/brasil_sur.zarr
+chirps-v3,v3.0,precip_rnl,mm/day,paraguay,"-64.0,-28.0,-53.0,-18.0",0.05,1981-01-01,1991-12-31,4017,0,parcial,s3://suyana-tiles/chirps/v3.0/paraguay.zarr
+chirps-v3,v3.0,precip_rnl,mm/day,uruguay,"-60.0,-38.0,-50.0,-29.0",0.05,1981-01-01,1991-12-31,4017,0,parcial,s3://suyana-tiles/chirps/v3.0/uruguay.zarr
+chirps-v3,v3.0,precip_rnl,mm/day,chile_norte_centro,"-77.0,-40.0,-66.0,-17.0",0.05,1981-01-01,1991-12-31,4017,0,parcial,s3://suyana-tiles/chirps/v3.0/chile_norte_centro.zarr
+chirps-v3,v3.0,precip_rnl,mm/day,argentina_norte,"-70.0,-43.0,-52.0,-21.0",0.05,1981-01-01,1991-12-31,4017,0,parcial,s3://suyana-tiles/chirps/v3.0/argentina_norte.zarr
+chirps-v3,v3.0,precip_rnl,mm/day,patagonia,"-77.0,-57.0,-56.0,-40.0",0.05,1981-01-01,1991-12-31,4011,6,parcial,s3://suyana-tiles/chirps/v3.0/patagonia.zarr
 chirts,v1.0,tmax,degC,mexico_norte,"-122.0,20.0,-96.0,35.0",0.05,1983-01-01,1989-12-31,2557,0,parcial,s3://suyana-tiles/chirts/v1.0/mexico_norte.zarr
 chirts,v1.0,tmin,degC,mexico_norte,"-122.0,20.0,-96.0,35.0",0.05,1983-01-01,1989-12-31,2557,0,parcial,s3://suyana-tiles/chirts/v1.0/mexico_norte.zarr
 chirts,v1.0,tmax,degC,mexico_sur,"-107.0,13.0,-84.0,23.0",0.05,1983-01-01,1989-12-31,2557,0,parcial,s3://suyana-tiles/chirts/v1.0/mexico_sur.zarr
@@ -119,9 +119,10 @@ era5,daily-stats,t2m_mean,K,ecuador_galapagos,"-95.0,-6.0,-74.0,3.0",0.25,1981-0
 era5,daily-stats,t2m_max,K,ecuador_galapagos,"-95.0,-6.0,-74.0,3.0",0.25,1981-01-01,2026-07-16,16633,0,completo,s3://suyana-tiles/era5/daily-stats/ecuador_galapagos.zarr
 era5,daily-stats,precip_sum,m,ecuador_galapagos,"-95.0,-6.0,-74.0,3.0",0.25,1981-01-01,2026-07-16,16632,0,completo,s3://suyana-tiles/era5/daily-stats/ecuador_galapagos.zarr
 era5,daily-stats,swvl1,m3 m-3,ecuador_galapagos,"-95.0,-6.0,-74.0,3.0",0.25,1981-01-01,2026-06-30,16617,0,completo,s3://suyana-tiles/era5/daily-stats/ecuador_galapagos.zarr
-era5,daily-stats,t2m_mean,K,peru,"-90.0,-20.0,-68.0,1.0",0.25,1981-01-01,2026-08-06,16654,0,completo,s3://suyana-tiles/era5/daily-stats/peru.zarr
-era5,daily-stats,t2m_max,K,peru,"-90.0,-20.0,-68.0,1.0",0.25,1981-01-01,2026-08-06,16654,0,completo,s3://suyana-tiles/era5/daily-stats/peru.zarr
-era5,daily-stats,precip_sum,m,peru,"-90.0,-20.0,-68.0,1.0",0.25,1981-01-01,2026-08-06,16653,0,completo,s3://suyana-tiles/era5/daily-stats/peru.zarr
+era5,daily-stats,t2m_mean,K,peru,"-90.0,-20.0,-68.0,1.0",0.25,1981-01-01,2026-08-13,16661,0,completo,s3://suyana-tiles/era5/daily-stats/peru.zarr
+era5,daily-stats,t2m_max,K,peru,"-90.0,-20.0,-68.0,1.0",0.25,1981-01-01,2026-08-13,16661,0,completo,s3://suyana-tiles/era5/daily-stats/peru.zarr
+era5,daily-stats,precip_sum,m,peru,"-90.0,-20.0,-68.0,1.0",0.25,1981-01-01,2026-08-13,16660,0,completo,s3://suyana-tiles/era5/daily-stats/peru.zarr
+era5,daily-stats,ssrd_sum,J m-2,peru,"-90.0,-20.0,-68.0,1.0",0.25,2024-01-01,2024-02-29,60,0,parcial,s3://suyana-tiles/era5/daily-stats/peru.zarr
 era5,daily-stats,swvl1,m3 m-3,peru,"-90.0,-20.0,-68.0,1.0",0.25,1981-01-01,2026-06-30,16617,0,completo,s3://suyana-tiles/era5/daily-stats/peru.zarr
 era5,daily-stats,t2m_mean,K,bolivia,"-71.0,-24.0,-56.0,-9.0",0.25,1981-01-01,2026-07-16,16633,0,completo,s3://suyana-tiles/era5/daily-stats/bolivia.zarr
 era5,daily-stats,t2m_max,K,bolivia,"-71.0,-24.0,-56.0,-9.0",0.25,1981-01-01,2026-07-16,16633,0,completo,s3://suyana-tiles/era5/daily-stats/bolivia.zarr
@@ -155,15 +156,15 @@ era5,daily-stats,t2m_mean,K,chile_norte_centro,"-77.0,-40.0,-66.0,-17.0",0.25,19
 era5,daily-stats,t2m_max,K,chile_norte_centro,"-77.0,-40.0,-66.0,-17.0",0.25,1981-01-01,2026-07-16,16633,0,completo,s3://suyana-tiles/era5/daily-stats/chile_norte_centro.zarr
 era5,daily-stats,precip_sum,m,chile_norte_centro,"-77.0,-40.0,-66.0,-17.0",0.25,1981-01-01,2026-07-16,16632,0,completo,s3://suyana-tiles/era5/daily-stats/chile_norte_centro.zarr
 era5,daily-stats,swvl1,m3 m-3,chile_norte_centro,"-77.0,-40.0,-66.0,-17.0",0.25,1981-01-01,2026-06-30,16617,0,completo,s3://suyana-tiles/era5/daily-stats/chile_norte_centro.zarr
-era5,daily-stats,t2m_mean,K,argentina_norte,"-70.0,-43.0,-52.0,-21.0",0.25,1981-01-01,2026-08-06,16654,0,completo,s3://suyana-tiles/era5/daily-stats/argentina_norte.zarr
-era5,daily-stats,t2m_max,K,argentina_norte,"-70.0,-43.0,-52.0,-21.0",0.25,1981-01-01,2026-08-06,16654,0,completo,s3://suyana-tiles/era5/daily-stats/argentina_norte.zarr
-era5,daily-stats,precip_sum,m,argentina_norte,"-70.0,-43.0,-52.0,-21.0",0.25,1981-01-01,2026-08-06,16653,0,completo,s3://suyana-tiles/era5/daily-stats/argentina_norte.zarr
+era5,daily-stats,t2m_mean,K,argentina_norte,"-70.0,-43.0,-52.0,-21.0",0.25,1981-01-01,2026-08-13,16661,0,completo,s3://suyana-tiles/era5/daily-stats/argentina_norte.zarr
+era5,daily-stats,t2m_max,K,argentina_norte,"-70.0,-43.0,-52.0,-21.0",0.25,1981-01-01,2026-08-13,16661,0,completo,s3://suyana-tiles/era5/daily-stats/argentina_norte.zarr
+era5,daily-stats,precip_sum,m,argentina_norte,"-70.0,-43.0,-52.0,-21.0",0.25,1981-01-01,2026-08-13,16660,0,completo,s3://suyana-tiles/era5/daily-stats/argentina_norte.zarr
 era5,daily-stats,swvl1,m3 m-3,argentina_norte,"-70.0,-43.0,-52.0,-21.0",0.25,1981-01-01,2026-06-30,16617,0,completo,s3://suyana-tiles/era5/daily-stats/argentina_norte.zarr
-era5,daily-stats,t2m_mean,K,patagonia,"-77.0,-57.0,-56.0,-40.0",0.25,1981-01-01,2026-08-06,16654,0,completo,s3://suyana-tiles/era5/daily-stats/patagonia.zarr
-era5,daily-stats,t2m_max,K,patagonia,"-77.0,-57.0,-56.0,-40.0",0.25,1981-01-01,2026-08-06,16654,0,completo,s3://suyana-tiles/era5/daily-stats/patagonia.zarr
-era5,daily-stats,precip_sum,m,patagonia,"-77.0,-57.0,-56.0,-40.0",0.25,1981-01-01,2026-08-06,16653,0,completo,s3://suyana-tiles/era5/daily-stats/patagonia.zarr
+era5,daily-stats,t2m_mean,K,patagonia,"-77.0,-57.0,-56.0,-40.0",0.25,1981-01-01,2026-08-13,16661,0,completo,s3://suyana-tiles/era5/daily-stats/patagonia.zarr
+era5,daily-stats,t2m_max,K,patagonia,"-77.0,-57.0,-56.0,-40.0",0.25,1981-01-01,2026-08-13,16661,0,completo,s3://suyana-tiles/era5/daily-stats/patagonia.zarr
+era5,daily-stats,precip_sum,m,patagonia,"-77.0,-57.0,-56.0,-40.0",0.25,1981-01-01,2026-08-13,16660,0,completo,s3://suyana-tiles/era5/daily-stats/patagonia.zarr
 era5,daily-stats,swvl1,m3 m-3,patagonia,"-77.0,-57.0,-56.0,-40.0",0.25,1981-01-01,2026-06-30,16617,0,completo,s3://suyana-tiles/era5/daily-stats/patagonia.zarr
-era5,daily-stats,t2m_mean,K,nino34,"-170.0,-5.0,-120.0,5.0",0.25,1981-01-01,2026-08-06,16654,0,completo,s3://suyana-tiles/era5/daily-stats/nino34.zarr
-era5,daily-stats,t2m_max,K,nino34,"-170.0,-5.0,-120.0,5.0",0.25,1981-01-01,2026-08-06,16654,0,completo,s3://suyana-tiles/era5/daily-stats/nino34.zarr
-era5,daily-stats,precip_sum,m,nino34,"-170.0,-5.0,-120.0,5.0",0.25,1981-01-01,2026-08-06,16653,0,completo,s3://suyana-tiles/era5/daily-stats/nino34.zarr
+era5,daily-stats,t2m_mean,K,nino34,"-170.0,-5.0,-120.0,5.0",0.25,1981-01-01,2026-08-13,16661,0,completo,s3://suyana-tiles/era5/daily-stats/nino34.zarr
+era5,daily-stats,t2m_max,K,nino34,"-170.0,-5.0,-120.0,5.0",0.25,1981-01-01,2026-08-13,16661,0,completo,s3://suyana-tiles/era5/daily-stats/nino34.zarr
+era5,daily-stats,precip_sum,m,nino34,"-170.0,-5.0,-120.0,5.0",0.25,1981-01-01,2026-08-13,16660,0,completo,s3://suyana-tiles/era5/daily-stats/nino34.zarr
 era5,daily-stats,swvl1,m3 m-3,nino34,"-170.0,-5.0,-120.0,5.0",0.25,1981-01-01,2026-06-30,16617,0,completo,s3://suyana-tiles/era5/daily-stats/nino34.zarr

@@ -67,7 +67,7 @@ for dsname in list_datasets(CONFIG_DIR):
                 units=dcfg.variables[v].units or "", scene=name, bbox=scfg.bbox,
                 resolution_deg=res, first_date=cov["first"], last_date=cov["last"],
                 n_days=cov["n_days"], gaps=cov["gaps"], status=cov["status"],
-                s3_zarr=f"{bucket}/{dsname}/{dcfg.version}/{name}.zarr"))
+                s3_zarr=store.uri))
         if vcov:
             presentes[name] = dict(bbox=scfg.bbox, variables=vcov)
     if presentes:
@@ -76,7 +76,10 @@ for dsname in list_datasets(CONFIG_DIR):
             temporal=dcfg.temporal, configured_range=f"{dcfg.start} -> {dcfg.end or 'hoy'}",
             resolution_deg=res,
             variables={v: (dcfg.variables[v].units or "") for v in dcfg.variables},
-            s3_path_template=f"{bucket}/{dsname}/{dcfg.version}/<scene>.zarr",
+            # dcfg.name, no dsname: el stem del YAML puede diferir del nombre del
+            # dataset (chirps-v3.yaml declara name: chirps) y ZarrStore escribe
+            # bajo dcfg.name -> usar el stem publicaba una ruta inexistente.
+            s3_path_template=f"{bucket}/{dcfg.name}/{dcfg.version}/<scene>.zarr",
             scenes=presentes)
 
 # --- CSV (dataframe) ---

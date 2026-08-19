@@ -1,4 +1,4 @@
-# Catálogo de datos en s3://suyana-tiles — generado 2026-08-12
+# Catálogo de datos en s3://suyana-tiles — generado 2026-08-19
 cfs:
   version: operational-analysis
   description: CFS operational analysis (CFSv2), ~0.2° global (NOAA NCEI). Media diaria del análisis 6-horario
@@ -175,8 +175,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-06-28'
-          n_days: 16615
+          last: '2026-07-05'
+          n_days: 16622
           gaps: 0
           status: completo
     bolivia:
@@ -266,8 +266,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-06-28'
-          n_days: 16615
+          last: '2026-07-05'
+          n_days: 16622
           gaps: 0
           status: completo
     chile_norte_centro:
@@ -292,8 +292,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-06-28'
-          n_days: 16615
+          last: '2026-07-05'
+          n_days: 16622
           gaps: 0
           status: completo
     patagonia:
@@ -305,8 +305,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-06-28'
-          n_days: 16615
+          last: '2026-07-05'
+          n_days: 16622
           gaps: 0
           status: completo
 chirps-v3:
@@ -321,7 +321,7 @@ chirps-v3:
   variables:
     precip_rnl: mm/day
     precip_sat: mm/day
-  s3_path_template: s3://suyana-tiles/chirps-v3/v3.0/<scene>.zarr
+  s3_path_template: s3://suyana-tiles/chirps/v3.0/<scene>.zarr
   scenes:
     mexico_norte:
       bbox:
@@ -992,6 +992,7 @@ era5:
     t2m_mean: K
     t2m_max: K
     precip_sum: m
+    ssrd_sum: J m-2
     swvl1: m3 m-3
   s3_path_template: s3://suyana-tiles/era5/daily-stats/<scene>.zarr
   scenes:
@@ -1283,22 +1284,28 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-08-06'
-          n_days: 16654
+          last: '2026-08-13'
+          n_days: 16661
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-08-06'
-          n_days: 16654
+          last: '2026-08-13'
+          n_days: 16661
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-08-06'
-          n_days: 16653
+          last: '2026-08-13'
+          n_days: 16660
           gaps: 0
           status: completo
+        ssrd_sum:
+          first: '2024-01-01'
+          last: '2024-02-29'
+          n_days: 60
+          gaps: 0
+          status: parcial
         swvl1:
           first: '1981-01-01'
           last: '2026-06-30'
@@ -1562,20 +1569,20 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-08-06'
-          n_days: 16654
+          last: '2026-08-13'
+          n_days: 16661
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-08-06'
-          n_days: 16654
+          last: '2026-08-13'
+          n_days: 16661
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-08-06'
-          n_days: 16653
+          last: '2026-08-13'
+          n_days: 16660
           gaps: 0
           status: completo
         swvl1:
@@ -1593,20 +1600,20 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-08-06'
-          n_days: 16654
+          last: '2026-08-13'
+          n_days: 16661
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-08-06'
-          n_days: 16654
+          last: '2026-08-13'
+          n_days: 16661
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-08-06'
-          n_days: 16653
+          last: '2026-08-13'
+          n_days: 16660
           gaps: 0
           status: completo
         swvl1:
@@ -1624,20 +1631,20 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-08-06'
-          n_days: 16654
+          last: '2026-08-13'
+          n_days: 16661
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-08-06'
-          n_days: 16654
+          last: '2026-08-13'
+          n_days: 16661
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-08-06'
-          n_days: 16653
+          last: '2026-08-13'
+          n_days: 16660
           gaps: 0
           status: completo
         swvl1:

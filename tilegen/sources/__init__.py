@@ -2,6 +2,7 @@
 
 from .cfs import CfsNceiSource
 from .cfsr import CfsrGdexSource
+from .cpc_psl import CpcPslSource
 from .edh import Era5EdhSource
 from .era5 import Era5CdsSource
 from .http_geotiff import HttpGeotiffSource
@@ -12,4 +13,5 @@ SOURCES = {
     "era5_edh": Era5EdhSource,
     "cfs_ncei": CfsNceiSource,
     "cfsr_gdex": CfsrGdexSource,
+    "cpc_psl": CpcPslSource,
 }

@@ -1,9 +1,9 @@
 # tile_generation_module (`tilegen`)
 
-Data pipeline that downloads climate datasets (ERA5, CHIRPS, CHIRTS, extensible
-to others) and publishes them to S3 as **per-scene Zarr cubes optimized for long
-time series** (main format), or as per-date **cloud-optimized GeoTIFF (COG)**
-mosaics (alternative format, for maps).
+Data pipeline that downloads climate datasets (ERA5, CHIRPS, CHIRTS, CPC,
+extensible to others) and publishes them to S3 as **per-scene Zarr cubes
+optimized for long time series** (main format), or as per-date
+**cloud-optimized GeoTIFF (COG)** mosaics (alternative format, for maps).
 
 **Scenes** are a fixed map of named rectangles — one per country (small ones
 grouped, large ones split into regions), extended offshore where there is
@@ -109,6 +109,10 @@ tilegen run -d chirps -x peru -s 2024-01-15 -e 2024-01-18 --local-only
 # coverage and gaps
 tilegen verify                     # catalog of everything in S3
 tilegen verify -d chirps -x peru   # or scoped to one dataset/scene
+
+# chunk layout
+tilegen chunks                     # how each cube is chunked, and what a sub-scene read costs
+tilegen chunks --stale             # only the cubes that predate the current config
 ```
 
 Useful options: `--overwrite`, `--workers N` (parallel downloads), `--format
@@ -145,6 +149,34 @@ done
 
 Mirror limitations: no daily maxima (`t2m_max` still comes from CDS) and it
 trails ~1 month behind the present (the daily cron update stays on CDS).
+
+### Chunking
+
+A Zarr read pulls whole chunks, so reading one pixel costs the entire chunk
+holding it: a sub-scene's full record costs `days × chunk_lat × chunk_lon × 4`
+bytes — note the time chunk does not enter into it. `spatial_chunk` in
+`config.yaml` is therefore the knob that decides how cheap a small-area query
+is. It is a **cap**, not a size: a scene smaller than it lands in a single
+chunk, which is what made ERA5 scenes (~85×89 px at 0.25°) unsplittable at the
+old value of 128.
+
+Chunk shape is fixed when a store is created, so changing the config only
+reaches new cubes. `tilegen rechunk` rewrites the existing ones:
+
+```bash
+tilegen rechunk --dry-run              # what would change, and the cost
+tilegen rechunk -d era5 -x peru        # one cube
+tilegen rechunk -d era5                # a whole dataset
+tilegen rechunk -d era5 -x peru --resume   # promote a copy an interrupted run left
+```
+
+It builds a copy beside the original and promotes it only after verifying that
+no data was lost, so an interrupted run leaves the cube intact plus a
+`{scene}.zarr.rechunk` to resume from or delete. All-NaN stretches are skipped
+rather than written, which keeps the cubes sparse.
+
+**Stop the cron first.** A rechunk and the daily update writing the same cube
+will lose data — the pipeline's write lock does not reach across processes.
 
 ## Automatic updates (cron)
 

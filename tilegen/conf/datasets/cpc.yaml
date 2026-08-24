@@ -1,0 +1,19 @@
+name: cpc
+version: v1.0
+description: CPC Global Daily Temperature V1.0 — Tmax/Tmin globales diarios, 0.5°, 1979–presente (NOAA PSL)
+source: cpc_psl
+temporal: daily
+start: 1979-01-01
+lag_days: 3           # el archivo del año en curso se actualiza con ~2 días de atraso
+
+# OPeNDAP, no el directorio de descarga: el servidor aplica el bbox antes de
+# mandar nada (~1.7 MB por año/escena en vez de los ~380 MB del archivo global).
+base_url: https://psl.noaa.gov/thredds/dodsC/Datasets/cpc_global_temp
+
+variables:
+  tmax:
+    source_file: tmax
+    units: degC
+  tmin:
+    source_file: tmin
+    units: degC

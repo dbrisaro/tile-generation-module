@@ -36,6 +36,7 @@ ETIQUETA = {
     "chirps":    "CHIRPS v2.0 · UCSB CHC · 0.05°",
     "chirps-v3": "CHIRPS v3.0 · UCSB CHC · 0.05°",
     "chirts":    "CHIRTS-daily v1.0 · UCSB CHC · 0.05°",
+    "cpc":       "CPC Global Temp V1.0 · NOAA PSL · 0.50°",
     "era5":      "ERA5 daily statistics · Copernicus · 0.25°",
 }
 
@@ -56,6 +57,12 @@ NOTAS = {
                  "así que todavía no entró en juego.",
     "chirts": "Backfill pausado el 22-jul. Llegó hasta 1989 de un archivo que termina en 2016 — "
               "es el hueco más grande del catálogo: faltan 27 años en 20 escenas.",
+    "cpc": "Recién configurado (24-ago-2026), todavía sin backfill. Es la única fuente de "
+           "tmax/tmin que llega al presente: <code>chirts</code> tiene 10x más resolución pero "
+           "termina en 2016. A cambio son 0.5°, y como interpola estaciones no tiene océano — "
+           "en las escenas costeras una parte de los píxeles va a quedar en NaN siempre, y eso "
+           "es la fuente siendo honesta, no un fallo de descarga. Se lee por OPeNDAP, que "
+           "recorta del lado del servidor.",
     "era5": "El núcleo del pipeline y lo más sano que hay: 1981 en adelante, sin huecos "
             "interiores, y desde el 19-ago las 21 escenas entran en el cron diario, partidas en "
             "3 grupos escalonados. El costo es el tiempo: cada escena espera 10–35 min por "

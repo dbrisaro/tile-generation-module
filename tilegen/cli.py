@@ -375,6 +375,138 @@ def catalog(config_dir, dataset, fmt):
                        + f"  de {aplica} zonas  [{estado}]" + span)
 
 
+def _stores(config_dir, dataset, scene_names, local_only=False):
+    """Every (stem, dcfg, scene, ZarrStore) the filters select, existing or not."""
+    from .zarrstore import ZarrStore
+    gcfg = load_global(config_dir)
+    scenes = load_scenes(config_dir)
+    stems = [dataset] if dataset else list_datasets(config_dir)
+    picked = scene_names or list(scenes)
+    unknown = [s for s in picked if s not in scenes]
+    if unknown:
+        raise click.UsageError(f"escena(s) desconocida(s): {', '.join(unknown)}")
+    out_dir = gcfg.runtime.workdir / "output"
+    for stem in stems:
+        dcfg = load_dataset(config_dir, stem)
+        for name in picked:
+            yield stem, dcfg, name, ZarrStore(gcfg, dcfg, name,
+                                              local_only=local_only, out_dir=out_dir)
+
+
+def _leido(shape, chunks):
+    """Bytes pulled to read one small sub-scene's ENTIRE record.
+
+    Reading a single pixel costs the whole chunk that holds it, so the total is
+    T * chunk_lat * chunk_lon * 4 — note it does not depend on the time chunk.
+    """
+    return shape[0] * chunks[1] * chunks[2] * 4
+
+
+@cli.command()
+@click.option("-d", "--dataset", default=None, help="Restrict to one dataset.")
+@click.option("-x", "--scene", "scene_names", multiple=True, help="Restrict to scene(s).")
+@click.option("--stale", is_flag=True, help="Only cubes whose chunks differ from the config.")
+@click.option("--local-only", is_flag=True, help="Inspect the workdir instead of S3.")
+@click.pass_obj
+def chunks(config_dir, dataset, scene_names, stale, local_only):
+    """Report how each cube is chunked, and what a sub-scene read costs.
+
+    Chunk shape is fixed when a store is created, so changing config.yaml only
+    affects NEW cubes — this is how you see which existing ones are behind.
+    """
+    filas, n_stale = [], 0
+    for stem, dcfg, scene, store in _stores(config_dir, dataset, scene_names, local_only):
+        try:
+            info = store.chunk_info()
+        except (FileNotFoundError, OSError):
+            continue
+        if not info:
+            continue
+        want = store.target_chunks()
+        for v, m in sorted(info.items()):
+            desfasado = tuple(m["chunks"]) != tuple(want)
+            n_stale += desfasado
+            if stale and not desfasado:
+                continue
+            filas.append((f"{stem}/{scene}", v, m["shape"], tuple(m["chunks"]),
+                          desfasado, _leido(m["shape"], m["chunks"])))
+    if not filas:
+        click.echo("nada que reportar" + (" (todo al dia)" if stale else ""))
+        return
+    w = max(len(f[0]) for f in filas)
+    for key, v, shape, ch, desfasado, leido in filas:
+        marca = click.style("desfasado", fg="yellow") if desfasado else click.style("ok", fg="green")
+        click.echo(f"{key:<{w}}  {v:<12} {str(shape):>22} "
+                   f"chunks {str(ch):>18}  sub-escena: {leido / 1e6:7.0f} MB  {marca}")
+    click.echo(f"\n{len(filas)} arrays, {n_stale} desfasados respecto del config.")
+    if n_stale:
+        click.echo("Corre 'tilegen rechunk' para reescribirlos.")
+
+
+@cli.command()
+@click.option("-d", "--dataset", default=None, help="Restrict to one dataset.")
+@click.option("-x", "--scene", "scene_names", multiple=True, help="Restrict to scene(s).")
+@click.option("--dry-run", is_flag=True, help="Report what would be rewritten, change nothing.")
+@click.option("--keep-old", is_flag=True, help="Leave the original as {scene}.zarr.old.")
+@click.option("--no-verify", is_flag=True,
+              help="Skip re-reading the copy to check it. Faster, and you lose the safety net.")
+@click.option("--resume", is_flag=True,
+              help="Reuse a {scene}.zarr.rechunk left by an interrupted run: verify and promote it.")
+@click.option("--local-only", is_flag=True, help="Operate on the workdir instead of S3.")
+@click.pass_obj
+def rechunk(config_dir, dataset, scene_names, dry_run, keep_old, no_verify, resume, local_only):
+    """Rewrite cubes with the chunk shape config.yaml asks for.
+
+    Builds a copy beside the original and only promotes it once verified, so an
+    interrupted run leaves the cube intact (and a `{scene}.zarr.rechunk` to delete).
+
+    STOP THE CRON FIRST: the daily update and a rechunk writing the same cube
+    will lose data — the pipeline's write lock does not reach across processes.
+    """
+    pend = []
+    for stem, dcfg, scene, store in _stores(config_dir, dataset, scene_names, local_only):
+        try:
+            info = store.chunk_info()
+        except (FileNotFoundError, OSError):
+            continue
+        if not info:
+            continue
+        want = store.target_chunks()
+        if all(tuple(m["chunks"]) == tuple(want) for m in info.values()):
+            continue
+        pend.append((stem, scene, store, info, want))
+
+    if not pend:
+        click.echo("todos los cubos ya tienen el chunkeo del config.")
+        return
+
+    click.echo(f"{len(pend)} cubos por rechunkear:")
+    for stem, scene, store, info, want in pend:
+        m = next(iter(info.values()))
+        antes = _leido(m["shape"], m["chunks"]) / 1e6
+        despues = _leido(m["shape"], want) / 1e6
+        click.echo(f"  {stem}/{scene:<16} {str(tuple(m['chunks'])):>18} -> {str(tuple(want)):<18}"
+                   f"  sub-escena {antes:6.0f} -> {despues:5.0f} MB"
+                   f"  ({len(info)} variables)")
+    if dry_run:
+        click.echo("\n--dry-run: no se toco nada.")
+        return
+
+    click.confirm(f"\nReescribir {len(pend)} cubos? El cron tiene que estar parado.", abort=True)
+    hechos, fallidos = 0, []
+    for stem, scene, store, _, _ in pend:
+        click.echo(f"-> {stem}/{scene}")
+        try:
+            r = store.rechunk(verify=not no_verify, keep_old=keep_old, resume=resume)
+            click.echo(click.style(f"   {r['status']}  chunks {r['chunks']}", fg="green"))
+            hechos += 1
+        except Exception as e:               # noqa: BLE001 - seguir con los demas
+            click.echo(click.style(f"   FALLO: {e}", fg="red"))
+            fallidos.append(f"{stem}/{scene}")
+    click.echo(f"\n{hechos} rechunkeados, {len(fallidos)} fallidos"
+               + (": " + ", ".join(fallidos) if fallidos else ""))
+
+
 @cli.command("init-bucket")
 @click.pass_obj
 def init_bucket(config_dir):

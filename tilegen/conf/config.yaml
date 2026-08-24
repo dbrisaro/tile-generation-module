@@ -14,7 +14,12 @@ output:
 
 zarr:
   time_chunk: 365       # 1 year per chunk: point series read ~1 object per year
-  spatial_chunk: 128    # pixels per chunk side
+  # Pixels per chunk side. This is a CAP, not a size: a scene smaller than it
+  # ends up in a single chunk (zarrstore._chunks clamps with min()). At 128 that
+  # swallowed every ERA5 scene whole (0.25 deg -> ~85x89 px), so reading one
+  # sub-scene's full series pulled the entire scene for every year. 32 keeps
+  # chunks around 1.5 MB and splits even the coarse grids.
+  spatial_chunk: 32
 
 grid:
   tile_size_deg: 10     # MERIT/GHSL-style fixed grid; tiles named by lower-left corner (s20w080)

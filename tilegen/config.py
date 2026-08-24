@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Optional
 
 import yaml
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class S3Cfg(BaseModel):
@@ -39,8 +39,12 @@ class CogCfg(BaseModel):
 
 
 class ZarrCfg(BaseModel):
-    time_chunk: int = 365     # days per internal chunk (long = fast time series)
-    spatial_chunk: int = 128  # pixels per internal chunk side
+    # A read of one pixel costs T * chunk_lat * chunk_lon * 4 bytes, which does
+    # not depend on time_chunk — so spatial_chunk is the knob that decides how
+    # cheap a sub-scene read is, and time_chunk only trades write cost (a daily
+    # write rewrites a whole time chunk) against request count.
+    time_chunk: int = Field(365, gt=0)     # days per internal chunk
+    spatial_chunk: int = Field(32, gt=0)   # pixels per internal chunk side (a cap)
 
 
 class OutputCfg(BaseModel):

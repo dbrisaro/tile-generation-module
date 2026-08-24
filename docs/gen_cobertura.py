@@ -70,13 +70,65 @@ def miles(n):
     return f"{n:,}".replace(",", ".")
 
 
+# Desde cuándo QUEREMOS tener cada fuente, que no siempre es el `start:` del YAML.
+# ERA5 declara 1940 porque es lo que Copernicus ofrece, pero el backfill acordado
+# arranca en 1981 (para que empareje con CHIRPS). Sin esta distinción, medio siglo
+# que nunca pensamos bajar aparecería como un hueco gigante en cada celda de era5.
+# Solo afecta a la línea de tiempo y al eje; el estado completo/parcial no la usa.
+OBJETIVO = {"era5": dt.date(1981, 1, 1)}
+
+
+def desde(stem, dcfg):
+    return max(dcfg.start, OBJETIVO.get(stem, dcfg.start))
+
+
 def esperado(dcfg):
     """Última fecha que la fuente debería tener publicada hoy."""
     e = HOY - dt.timedelta(days=dcfg.lag_days)
     return min(e, dcfg.end) if dcfg.end else e
 
 
-def cobertura(store, dcfg, v):
+def serie_anual(w, missing, stem, dcfg):
+    """Nivel de llenado por año, sobre el eje común AÑO0..AÑO1.
+
+    Un caracter por año: 'f' lleno, 'p' a medias, 'e' vacío, 'x' fuera del rango
+    que el dataset declara (no es un hueco: ese año no le corresponde).
+
+    Los días que la fuente NO publicó (`missing`) cuentan como llenos: el cubo
+    está tan completo como puede estar. Sin esto, CHIRPS aparecería agujereado
+    en cada día que UCSB nunca sacó.
+    """
+    lo_ds, hi_ds = desde(stem, dcfg), esperado(dcfg)
+    tengo = {}
+    for iso in w:
+        tengo[int(iso[:4])] = tengo.get(int(iso[:4]), 0) + 1
+    for iso in missing:
+        if lo_ds <= dt.date.fromisoformat(iso) <= hi_ds:
+            tengo[int(iso[:4])] = tengo.get(int(iso[:4]), 0) + 1
+    out = []
+    for y in range(ANIO0, ANIO1 + 1):
+        lo, hi = max(dt.date(y, 1, 1), lo_ds), min(dt.date(y, 12, 31), hi_ds)
+        if lo > hi:
+            out.append("x")
+            continue
+        frac = tengo.get(y, 0) / ((hi - lo).days + 1)
+        out.append("f" if frac >= 0.995 else "e" if frac <= 0 else "p")
+    return "".join(out)
+
+
+def tramos(serie):
+    """'xxffpppee' -> [(1983, 1990), ...]: rangos de años NO llenos, para el tooltip."""
+    out, ini = [], None
+    for i, ch in enumerate(serie + "f"):
+        if ch in "pe" and ini is None:
+            ini = ANIO0 + i
+        elif ch not in "pe" and ini is not None:
+            out.append((ini, ANIO0 + i - 1))
+            ini = None
+    return out
+
+
+def cobertura(store, stem, dcfg, v):
     """None si no hay nada escrito; si no, el estado de esa celda."""
     led = store.read_ledger(v)
     w = led["written"]
@@ -85,7 +137,9 @@ def cobertura(store, dcfg, v):
     d0, d1 = dt.date.fromisoformat(w[0]), dt.date.fromisoformat(w[-1])
     huecos = len({str(d) for d in daterange(d0, d1)} - set(w) - set(led["missing"]))
     atraso = (esperado(dcfg) - d1).days
+    serie = serie_anual(w, led["missing"], stem, dcfg)
     return dict(first=w[0], last=w[-1], n_days=len(w), huecos=huecos, atraso=atraso,
+                serie=serie, tramos=tramos(serie),
                 estado="completo" if not huecos and atraso <= GRACIA else "parcial")
 
 
@@ -100,13 +154,19 @@ datasets = [(s, load_dataset(CONFIG_DIR, s)) for s in list_datasets(CONFIG_DIR)]
 # columnas: [(stem, dcfg, variable), ...] en orden de dataset y de YAML
 cols = [(s, d, v) for s, d in datasets for v in d.variables]
 
+# Eje temporal COMÚN a toda la matriz. Que cada celda use el mismo eje es el punto:
+# así una franja vertical de la tabla es el mismo año en todas las escenas, y se
+# puede leer de un vistazo si un hueco es viejo (backfill) o reciente (el cron).
+ANIO0 = min(desde(s, d).year for s, d in datasets)
+ANIO1 = max(esperado(d).year for _, d in datasets)
+
 celdas = {}   # (stem, variable, escena) -> cov | None
 for stem, dcfg in datasets:
     for scene in scenes:
         store = ZarrStore(gcfg, dcfg, scene, local_only=False, out_dir=None)
         existe = store.exists()
         for v in dcfg.variables:
-            celdas[(stem, v, scene)] = cobertura(store, dcfg, v) if existe else None
+            celdas[(stem, v, scene)] = cobertura(store, stem, dcfg, v) if existe else None
     print(f"  relevado {stem}")
 
 vals = list(celdas.values())
@@ -118,6 +178,23 @@ dias = sum(c["n_days"] for c in vals if c)
 
 # ------------------------------------------------------------------- matriz
 GLIFO = {"completo": "✓", "parcial": "◐", "vacio": "·"}
+TINTA = {"f": "var(--ok)", "p": "var(--mid)", "e": "var(--gap)", "x": "transparent"}
+
+
+def gradiente(serie):
+    """La serie por año -> un linear-gradient de topes duros, un tramo por año.
+
+    Se comprimen los años consecutivos del mismo color en un solo par de topes:
+    una celda típica son 2 o 3 tramos, no 48. Sin esto el HTML pesa ~4x.
+    """
+    n, paradas, i = len(serie), [], 0
+    while i < n:
+        j = i
+        while j + 1 < n and serie[j + 1] == serie[i]:
+            j += 1
+        paradas.append(f"{TINTA[serie[i]]} {i / n:.4%} {(j + 1) / n:.4%}")
+        i = j + 1
+    return "linear-gradient(90deg," + ",".join(paradas) + ")"
 
 filas = []
 for scene, scfg in scenes.items():
@@ -135,14 +212,21 @@ for scene, scfg in scenes.items():
                 tip.append(f"{cov['huecos']} días sueltos sin escribir")
             if cov["atraso"] > 0:
                 tip.append(f"{cov['atraso']} días de atraso")
+            if cov["tramos"]:
+                tip.append("años sin completar: " + ", ".join(
+                    str(a) if a == b else f"{a}–{b}" for a, b in cov["tramos"]))
         else:
             tip.append("Sin datos en S3")
         gs = " gs" if stem != prev_ds else ""   # línea divisoria entre datasets
         prev_ds = stem
+        # Fuera del rango del dataset la barra va transparente, no gris: que un año
+        # "no le corresponda" a la fuente no es lo mismo que faltar.
+        serie = cov["serie"] if cov else serie_anual([], [], stem, dcfg)
         tds.append(
             f'<td class="c c-{estado}{gs}" tabindex="0" data-tip="{html.escape(chr(10).join(tip))}">'
             f'<span class="g" aria-hidden="true">{GLIFO[estado]}</span>'
             f'<span class="f">{cov["last"] if cov else "—"}</span>'
+            f'<span class="tl" style="background-image:{gradiente(serie)}"></span>'
             f'<span class="sr">{estado}</span></td>')
     filas.append(
         f'<tr><th class="esc" scope="row"><span class="esc-n">{scene}</span>'
@@ -200,6 +284,17 @@ OUT.write_text(f"""<title>Cobertura de cubos climáticos</title>
     <label class="toggle"><input type="checkbox" id="tg"> Mostrar última fecha</label>
   </div>
 
+  <div class="tl-leg">
+    <p>La barrita de cada celda es una <b>línea de tiempo de {ANIO0} a {ANIO1}</b>, un tramo por
+    año, con el mismo eje en toda la tabla. Sirve para distinguir lo que el color solo no dice:
+    un hueco <b>a la izquierda</b> es backfill pendiente; uno <b>a la derecha</b> es el cron
+    atrasado. Los años que la fuente no cubre van en blanco, no en gris.</p>
+    <div class="ruler" aria-hidden="true">
+      <span class="tl tl-demo" style="background-image:{gradiente('x' * 6 + 'e' * 10 + 'p' * 3 + 'f' * (ANIO1 - ANIO0 - 18))}"></span>
+      <span class="ru"><b>{ANIO0}</b><b>{(ANIO0 + ANIO1) // 2}</b><b>{ANIO1}</b></span>
+    </div>
+  </div>
+
   <div class="scroll">
     <table id="m">
       <thead>
@@ -221,6 +316,8 @@ OUT.write_text(f"""<title>Cobertura de cubos climáticos</title>
     Estado calculado contra los ledgers <code>_ledger/&lt;escena&gt;/&lt;variable&gt;.json</code> de cada cubo.<br>
     «Al día» = la última fecha escrita está dentro de los {GRACIA} días de gracia sobre el retraso
     de publicación propio de cada fuente.<br>
+    La línea de tiempo se mide contra lo que <b>queremos</b> tener, no contra todo lo que la fuente
+    ofrece: ERA5 llega hasta 1940 en origen, pero acá se mide desde 1981 para emparejar con CHIRPS.<br>
     Regenerar con <code>python docs/gen_cobertura.py</code>.
   </footer>
 </div>

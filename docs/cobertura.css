@@ -5,7 +5,7 @@
   --rule:#dde2d9; --rule-2:#c6cdc1; --accent:#20505e;
   --ok:#0ca30c; --ok-ink:#ffffff;
   --mid:#fab219; --mid-ink:#3a2c00;
-  --nil:#e2e6de; --nil-ink:#9aa294;
+  --nil:#e2e6de; --nil-ink:#9aa294; --gap:#c3cabd;
   --ring:rgba(19,23,17,.10);
 }
 @media (prefers-color-scheme: dark) {
@@ -16,7 +16,7 @@
     --rule:#2a2e29; --rule-2:#3a403a; --accent:#6fb3c4;
     --ok:#0ca30c; --ok-ink:#ffffff;
     --mid:#fab219; --mid-ink:#3a2c00;
-    --nil:#282d27; --nil-ink:#767e72;
+    --nil:#282d27; --nil-ink:#767e72; --gap:#414a40;
     --ring:rgba(242,245,240,.12);
   }
 }
@@ -27,7 +27,7 @@
   --rule:#2a2e29; --rule-2:#3a403a; --accent:#6fb3c4;
   --ok:#0ca30c; --ok-ink:#ffffff;
   --mid:#fab219; --mid-ink:#3a2c00;
-  --nil:#282d27; --nil-ink:#767e72;
+  --nil:#282d27; --nil-ink:#767e72; --gap:#414a40;
   --ring:rgba(242,245,240,.12);
 }
 * { box-sizing:border-box; }
@@ -109,18 +109,43 @@ thead th.esc { background:var(--raised); border-bottom:1px solid var(--rule-2); 
 .esc-t { display:block; font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:10px;
   letter-spacing:.07em; text-transform:uppercase; color:var(--muted); }
 td.c {
-  width:74px; height:38px; text-align:center; border-bottom:2px solid var(--surface);
+  width:74px; height:46px; text-align:center; border-bottom:2px solid var(--surface);
   border-right:2px solid var(--surface); position:relative; cursor:default;
+  padding:5px 5px 6px; vertical-align:top;
 }
 td.gs { border-left:1px solid var(--rule-2); }
-td.c .g { font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:13px; font-weight:600; }
-td.c .f { display:none; font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:10px;
-  font-variant-numeric:tabular-nums; }
+td.c .g { display:block; line-height:1.35;
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:13px; font-weight:600; }
+td.c .f { display:none; line-height:1.35; font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:10px; font-variant-numeric:tabular-nums; }
 .fechas td.c .g { display:none; }
 .fechas td.c .f { display:block; }
-.c-completo { background:var(--ok); color:var(--ok-ink); }
-.c-parcial  { background:var(--mid); color:var(--mid-ink); }
+
+/* La línea de tiempo: un tramo por año, mismo eje en toda la tabla. El borde
+   la despega del fondo teñido de la celda, que si no se confunde con el gris. */
+.tl {
+  display:block; height:9px; border-radius:1px; margin-top:3px;
+  background-color:transparent; background-repeat:no-repeat;
+  box-shadow:0 0 0 1px var(--ring) inset;
+}
+
+/* Fondo TEÑIDO, no pleno: el color sigue dando el barrido de un vistazo, pero
+   deja que la barra de arriba se lea. El estado pleno vive ahora en la barra. */
+.c-completo { background:color-mix(in srgb, var(--ok) 20%, var(--surface)); }
+.c-parcial  { background:color-mix(in srgb, var(--mid) 26%, var(--surface)); }
 .c-vacio    { background:var(--nil); color:var(--nil-ink); }
+.c-completo .g, .c-completo .f { color:var(--ok); }
+.c-parcial .g, .c-parcial .f { color:var(--mid-ink); }
+
+.tl-leg { display:flex; gap:24px; align-items:center; flex-wrap:wrap;
+  background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:14px 18px; }
+.tl-leg p { margin:0; flex:1 1 380px; font-size:13px; color:var(--ink-2); }
+.tl-leg b { color:var(--ink); font-weight:600; }
+.ruler { flex:0 0 240px; }
+.tl-demo { height:11px; }
+.ru { display:flex; justify-content:space-between; margin-top:4px; }
+.ru b { font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:10px;
+  font-weight:500; color:var(--muted); font-variant-numeric:tabular-nums; }
 td.c:hover, td.c:focus-visible { outline:2px solid var(--ink); outline-offset:-2px; z-index:3; }
 
 #tip {

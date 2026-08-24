@@ -1,0 +1,1069 @@
+<title>Cobertura de cubos climáticos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root {
+  color-scheme: light;
+  --plane:#eef1ec; --surface:#fbfcfa; --raised:#f5f7f3;
+  --ink:#131711; --ink-2:#4d5449; --muted:#838b7e;
+  --rule:#dde2d9; --rule-2:#c6cdc1; --accent:#20505e;
+  --ok:#0ca30c; --ok-ink:#ffffff;
+  --mid:#fab219; --mid-ink:#3a2c00;
+  --nil:#e2e6de; --nil-ink:#9aa294;
+  --ring:rgba(19,23,17,.10);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --plane:#0e100e; --surface:#171a18; --raised:#1e221f;
+    --ink:#f2f5f0; --ink-2:#b6bdb2; --muted:#7f877b;
+    --rule:#2a2e29; --rule-2:#3a403a; --accent:#6fb3c4;
+    --ok:#0ca30c; --ok-ink:#ffffff;
+    --mid:#fab219; --mid-ink:#3a2c00;
+    --nil:#282d27; --nil-ink:#767e72;
+    --ring:rgba(242,245,240,.12);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --plane:#0e100e; --surface:#171a18; --raised:#1e221f;
+  --ink:#f2f5f0; --ink-2:#b6bdb2; --muted:#7f877b;
+  --rule:#2a2e29; --rule-2:#3a403a; --accent:#6fb3c4;
+  --ok:#0ca30c; --ok-ink:#ffffff;
+  --mid:#fab219; --mid-ink:#3a2c00;
+  --nil:#282d27; --nil-ink:#767e72;
+  --ring:rgba(242,245,240,.12);
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; background:var(--plane); color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+.wrap { max-width:1240px; margin:0 auto; padding:40px 24px 72px; display:flex; flex-direction:column; gap:28px; }
+.sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+
+.eyebrow {
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11px; font-weight:500;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:0 0 10px;
+}
+h1 { margin:0; font-size:clamp(28px,4.2vw,42px); font-weight:600; letter-spacing:-.02em; text-wrap:balance; }
+.sub { margin:12px 0 0; max-width:64ch; color:var(--ink-2); }
+.stamp {
+  margin:14px 0 0; font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:12px; color:var(--muted);
+}
+
+.tiles { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; }
+.tile {
+  background:var(--surface); border:1px solid var(--rule); border-radius:3px;
+  padding:16px 18px; display:flex; flex-direction:column; gap:2px;
+}
+.tile .n { font-size:30px; font-weight:600; letter-spacing:-.02em; font-variant-numeric:tabular-nums; }
+.tile .l { font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--muted); display:flex; align-items:center; gap:7px; }
+.tile .p { font-size:12px; color:var(--ink-2); font-variant-numeric:tabular-nums; }
+.chip { width:9px; height:9px; border-radius:2px; display:inline-block; box-shadow:0 0 0 1px var(--ring) inset; }
+.chip-ok { background:var(--ok); } .chip-mid { background:var(--mid); } .chip-nil { background:var(--nil); }
+
+.bar { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+.leg { display:flex; gap:18px; flex-wrap:wrap; }
+.leg > div { display:flex; align-items:baseline; gap:8px; font-size:13px; color:var(--ink-2); }
+.leg b { color:var(--ink); font-weight:600; }
+.key {
+  width:19px; height:19px; border-radius:2px; display:inline-grid; place-items:center;
+  font-size:11px; font-weight:700; flex:none; align-self:center;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+}
+.key-ok { background:var(--ok); color:var(--ok-ink); }
+.key-mid { background:var(--mid); color:var(--mid-ink); }
+.key-nil { background:var(--nil); color:var(--nil-ink); box-shadow:0 0 0 1px var(--rule) inset; }
+.toggle {
+  display:inline-flex; align-items:center; gap:8px; cursor:pointer; user-select:none;
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--ink-2); background:var(--surface);
+  border:1px solid var(--rule-2); border-radius:3px; padding:8px 12px;
+}
+.toggle:hover { border-color:var(--accent); color:var(--ink); }
+.toggle input { accent-color:var(--accent); margin:0; }
+
+.scroll { overflow-x:auto; background:var(--surface); border:1px solid var(--rule); border-radius:3px; }
+table { border-collapse:separate; border-spacing:0; font-size:12px; }
+th, td { padding:0; }
+th.grp {
+  text-align:left; padding:12px 10px 8px; border-bottom:1px solid var(--rule-2);
+  border-left:1px solid var(--rule-2); vertical-align:bottom; background:var(--raised);
+}
+th.grp:first-of-type { border-left:0; }
+.grp-n { display:block; font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:12px;
+  font-weight:600; color:var(--ink); letter-spacing:.02em; }
+.grp-d { display:block; font-size:10.5px; color:var(--muted); white-space:nowrap; }
+th.var {
+  padding:8px 6px; border-bottom:1px solid var(--rule-2); vertical-align:bottom;
+  background:var(--raised); font-weight:500;
+}
+th.var span { display:block; font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:10.5px; color:var(--ink-2); white-space:nowrap; }
+th.esc {
+  position:sticky; left:0; z-index:2; background:var(--surface); text-align:left;
+  padding:0 14px 0 16px; border-right:1px solid var(--rule-2); border-bottom:1px solid var(--rule);
+  min-width:172px; box-shadow:1px 0 0 var(--rule);
+}
+thead th.esc { background:var(--raised); border-bottom:1px solid var(--rule-2); }
+.esc-n { display:block; font-weight:500; font-size:12.5px; color:var(--ink); }
+.esc-t { display:block; font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:10px;
+  letter-spacing:.07em; text-transform:uppercase; color:var(--muted); }
+td.c {
+  width:74px; height:38px; text-align:center; border-bottom:2px solid var(--surface);
+  border-right:2px solid var(--surface); position:relative; cursor:default;
+}
+td.gs { border-left:1px solid var(--rule-2); }
+td.c .g { font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:13px; font-weight:600; }
+td.c .f { display:none; font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:10px;
+  font-variant-numeric:tabular-nums; }
+.fechas td.c .g { display:none; }
+.fechas td.c .f { display:block; }
+.c-completo { background:var(--ok); color:var(--ok-ink); }
+.c-parcial  { background:var(--mid); color:var(--mid-ink); }
+.c-vacio    { background:var(--nil); color:var(--nil-ink); }
+td.c:hover, td.c:focus-visible { outline:2px solid var(--ink); outline-offset:-2px; z-index:3; }
+
+#tip {
+  position:fixed; z-index:50; pointer-events:none; opacity:0; transition:opacity .1s;
+  background:var(--ink); color:var(--plane); padding:9px 12px; border-radius:3px;
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11px; line-height:1.5;
+  white-space:pre; max-width:min(92vw,360px); box-shadow:0 6px 20px rgba(0,0,0,.22);
+}
+#tip.on { opacity:1; }
+
+.notas { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1px;
+  background:var(--rule); border:1px solid var(--rule); border-radius:3px; overflow:hidden; }
+.nota { background:var(--surface); padding:18px 20px; }
+.nota h3 { margin:0; font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:13px;
+  font-weight:600; letter-spacing:.02em; }
+.nota-d { margin:2px 0 10px; font-size:11px; color:var(--muted);
+  font-family:"IBM Plex Mono",ui-monospace,monospace; }
+.nota p { margin:0; font-size:13.5px; color:var(--ink-2); }
+.nota code { font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.92em;
+  background:var(--raised); padding:1px 4px; border-radius:2px; color:var(--ink); }
+h2 { margin:0; font-size:19px; font-weight:600; letter-spacing:-.01em; }
+.sec-h { display:flex; flex-direction:column; gap:4px; }
+.sec-h p { margin:0; color:var(--ink-2); font-size:13.5px; max-width:70ch; }
+footer { border-top:1px solid var(--rule); padding-top:18px; color:var(--muted);
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11px; line-height:1.7; }
+@media (prefers-reduced-motion:reduce) { * { transition:none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">suyana · s3://suyana-tiles</p>
+    <h1>Cobertura de cubos climáticos</h1>
+    <p class="sub">Qué hay escrito en cada cubo Zarr, escena por escena y variable por
+    variable. El estado sale de los ledgers reales del bucket, no de la configuración.</p>
+    <p class="stamp">Leído 2026-08-20 10:40 · 336 combinaciones · 21 escenas × 16 variables</p>
+  </header>
+
+  <section class="tiles">
+    <div class="tile"><span class="l"><span class="chip chip-ok"></span>Completo</span>
+      <span class="n">86</span><span class="p">26% · sin huecos y al día</span></div>
+    <div class="tile"><span class="l"><span class="chip chip-mid"></span>A medias</span>
+      <span class="n">93</span><span class="p">28% · con huecos o atrasado</span></div>
+    <div class="tile"><span class="l"><span class="chip chip-nil"></span>Sin datos</span>
+      <span class="n">157</span><span class="p">47% · nunca se escribió</span></div>
+    <div class="tile"><span class="l">Días escritos</span>
+      <span class="n">2.023.104</span><span class="p">sumando escena × variable</span></div>
+  </section>
+
+  <div class="bar">
+    <div class="leg">
+      <div><span class="key key-ok">✓</span><span><b>Completo</b> — sin días sueltos y al día respecto de su retraso de publicación</span></div>
+      <div><span class="key key-mid">◐</span><span><b>A medias</b> — hay datos, pero con huecos o atrasados</span></div>
+      <div><span class="key key-nil">·</span><span><b>Sin datos</b> — no existe el cubo para esa escena</span></div>
+    </div>
+    <label class="toggle"><input type="checkbox" id="tg"> Mostrar última fecha</label>
+  </div>
+
+  <div class="scroll">
+    <table id="m">
+      <thead>
+        <tr><th class="esc" scope="col"><span class="esc-n">Escena</span></th><th class="grp" colspan="3" scope="colgroup"><span class="grp-n">cfs</span><span class="grp-d">CFS operational analysis · NOAA NCEI · 0.20°</span></th><th class="grp" colspan="2" scope="colgroup"><span class="grp-n">cfsr</span><span class="grp-d">CFS reanalysis · NCAR GDEX · 0.31°</span></th><th class="grp" colspan="1" scope="colgroup"><span class="grp-n">chirps</span><span class="grp-d">CHIRPS v2.0 · UCSB CHC · 0.05°</span></th><th class="grp" colspan="2" scope="colgroup"><span class="grp-n">chirps-v3</span><span class="grp-d">CHIRPS v3.0 · UCSB CHC · 0.05°</span></th><th class="grp" colspan="2" scope="colgroup"><span class="grp-n">chirts</span><span class="grp-d">CHIRTS-daily v1.0 · UCSB CHC · 0.05°</span></th><th class="grp" colspan="6" scope="colgroup"><span class="grp-n">era5</span><span class="grp-d">ERA5 daily statistics · Copernicus · 0.25°</span></th></tr>
+        <tr><th class="esc" scope="col"><span class="esc-t">21 zonas</span></th><th class="var" scope="col"><span>tmp2m</span></th><th class="var" scope="col"><span>u10m</span></th><th class="var" scope="col"><span>v10m</span></th><th class="var" scope="col"><span>u10m</span></th><th class="var" scope="col"><span>v10m</span></th><th class="var" scope="col"><span>precip</span></th><th class="var" scope="col"><span>precip_rnl</span></th><th class="var" scope="col"><span>precip_sat</span></th><th class="var" scope="col"><span>tmax</span></th><th class="var" scope="col"><span>tmin</span></th><th class="var" scope="col"><span>t2m_mean</span></th><th class="var" scope="col"><span>t2m_max</span></th><th class="var" scope="col"><span>t2m_min</span></th><th class="var" scope="col"><span>precip_sum</span></th><th class="var" scope="col"><span>ssrd_sum</span></th><th class="var" scope="col"><span>swvl1</span></th></tr>
+      </thead>
+      <tbody><tr><th class="esc" scope="row"><span class="esc-n">mexico_norte</span><span class="esc-t">pais</span></th><td class="c c-vacio gs" tabindex="0" data-tip="cfs · tmp2m — mexico_norte
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · u10m — mexico_norte
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · v10m — mexico_norte
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio gs" tabindex="0" data-tip="cfsr · u10m — mexico_norte
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfsr · v10m — mexico_norte
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo gs" tabindex="0" data-tip="chirps · precip — mexico_norte
+1981-01-01 → 2026-07-06
+16.623 días escritos
+esperado hasta 2026-07-06"><span class="g" aria-hidden="true">✓</span><span class="f">2026-07-06</span><span class="sr">completo</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirps-v3 · precip_rnl — mexico_norte
+1981-01-01 → 1992-12-31
+4.383 días escritos
+esperado hasta 2026-07-06
+12240 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1992-12-31</span><span class="sr">parcial</span></td><td class="c c-vacio" tabindex="0" data-tip="chirps-v3 · precip_sat — mexico_norte
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirts · tmax — mexico_norte
+1983-01-01 → 1989-12-31
+2.557 días escritos
+esperado hasta 2016-12-31
+9862 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1989-12-31</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="chirts · tmin — mexico_norte
+1983-01-01 → 1989-12-31
+2.557 días escritos
+esperado hasta 2016-12-31
+9862 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1989-12-31</span><span class="sr">parcial</span></td><td class="c c-completo gs" tabindex="0" data-tip="era5 · t2m_mean — mexico_norte
+1981-01-01 → 2026-08-14
+16.662 días escritos
+esperado hasta 2026-08-14"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-14</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · t2m_max — mexico_norte
+1981-01-01 → 2026-08-14
+16.662 días escritos
+esperado hasta 2026-08-14"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-14</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · t2m_min — mexico_norte
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · precip_sum — mexico_norte
+1981-01-01 → 2026-08-14
+16.661 días escritos
+esperado hasta 2026-08-14"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-14</span><span class="sr">completo</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · ssrd_sum — mexico_norte
+1981-01-01 → 2026-08-14
+16.627 días escritos
+esperado hasta 2026-08-14
+34 días sueltos sin escribir"><span class="g" aria-hidden="true">◐</span><span class="f">2026-08-14</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · swvl1 — mexico_norte
+1981-01-01 → 2026-06-30
+16.617 días escritos
+esperado hasta 2026-08-14
+45 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-30</span><span class="sr">parcial</span></td></tr><tr><th class="esc" scope="row"><span class="esc-n">mexico_sur</span><span class="esc-t">pais</span></th><td class="c c-vacio gs" tabindex="0" data-tip="cfs · tmp2m — mexico_sur
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · u10m — mexico_sur
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · v10m — mexico_sur
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio gs" tabindex="0" data-tip="cfsr · u10m — mexico_sur
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfsr · v10m — mexico_sur
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo gs" tabindex="0" data-tip="chirps · precip — mexico_sur
+1981-01-01 → 2026-07-06
+16.623 días escritos
+esperado hasta 2026-07-06"><span class="g" aria-hidden="true">✓</span><span class="f">2026-07-06</span><span class="sr">completo</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirps-v3 · precip_rnl — mexico_sur
+1981-01-01 → 1992-12-31
+4.383 días escritos
+esperado hasta 2026-07-06
+12240 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1992-12-31</span><span class="sr">parcial</span></td><td class="c c-vacio" tabindex="0" data-tip="chirps-v3 · precip_sat — mexico_sur
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirts · tmax — mexico_sur
+1983-01-01 → 1989-12-31
+2.557 días escritos
+esperado hasta 2016-12-31
+9862 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1989-12-31</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="chirts · tmin — mexico_sur
+1983-01-01 → 1989-12-31
+2.557 días escritos
+esperado hasta 2016-12-31
+9862 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1989-12-31</span><span class="sr">parcial</span></td><td class="c c-completo gs" tabindex="0" data-tip="era5 · t2m_mean — mexico_sur
+1981-01-01 → 2026-08-14
+16.662 días escritos
+esperado hasta 2026-08-14"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-14</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · t2m_max — mexico_sur
+1981-01-01 → 2026-08-14
+16.662 días escritos
+esperado hasta 2026-08-14"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-14</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · t2m_min — mexico_sur
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · precip_sum — mexico_sur
+1981-01-01 → 2026-08-14
+16.661 días escritos
+esperado hasta 2026-08-14"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-14</span><span class="sr">completo</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · ssrd_sum — mexico_sur
+1981-01-01 → 2026-08-14
+16.627 días escritos
+esperado hasta 2026-08-14
+34 días sueltos sin escribir"><span class="g" aria-hidden="true">◐</span><span class="f">2026-08-14</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · swvl1 — mexico_sur
+1981-01-01 → 2026-06-30
+16.617 días escritos
+esperado hasta 2026-08-14
+45 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-30</span><span class="sr">parcial</span></td></tr><tr><th class="esc" scope="row"><span class="esc-n">centroamerica</span><span class="esc-t">grupo</span></th><td class="c c-vacio gs" tabindex="0" data-tip="cfs · tmp2m — centroamerica
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · u10m — centroamerica
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · v10m — centroamerica
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio gs" tabindex="0" data-tip="cfsr · u10m — centroamerica
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfsr · v10m — centroamerica
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo gs" tabindex="0" data-tip="chirps · precip — centroamerica
+1981-01-01 → 2026-07-06
+16.623 días escritos
+esperado hasta 2026-07-06"><span class="g" aria-hidden="true">✓</span><span class="f">2026-07-06</span><span class="sr">completo</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirps-v3 · precip_rnl — centroamerica
+1981-01-01 → 1992-12-31
+4.383 días escritos
+esperado hasta 2026-07-06
+12240 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1992-12-31</span><span class="sr">parcial</span></td><td class="c c-vacio" tabindex="0" data-tip="chirps-v3 · precip_sat — centroamerica
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirts · tmax — centroamerica
+1983-01-01 → 1989-12-31
+2.557 días escritos
+esperado hasta 2016-12-31
+9862 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1989-12-31</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="chirts · tmin — centroamerica
+1983-01-01 → 1989-12-31
+2.557 días escritos
+esperado hasta 2016-12-31
+9862 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1989-12-31</span><span class="sr">parcial</span></td><td class="c c-completo gs" tabindex="0" data-tip="era5 · t2m_mean — centroamerica
+1981-01-01 → 2026-08-14
+16.662 días escritos
+esperado hasta 2026-08-14"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-14</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · t2m_max — centroamerica
+1981-01-01 → 2026-08-14
+16.662 días escritos
+esperado hasta 2026-08-14"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-14</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · t2m_min — centroamerica
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · precip_sum — centroamerica
+1981-01-01 → 2026-08-14
+16.661 días escritos
+esperado hasta 2026-08-14"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-14</span><span class="sr">completo</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · ssrd_sum — centroamerica
+1981-01-01 → 2026-08-14
+16.627 días escritos
+esperado hasta 2026-08-14
+34 días sueltos sin escribir"><span class="g" aria-hidden="true">◐</span><span class="f">2026-08-14</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · swvl1 — centroamerica
+1981-01-01 → 2026-06-30
+16.617 días escritos
+esperado hasta 2026-08-14
+45 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-30</span><span class="sr">parcial</span></td></tr><tr><th class="esc" scope="row"><span class="esc-n">antillas_mayores</span><span class="esc-t">grupo</span></th><td class="c c-vacio gs" tabindex="0" data-tip="cfs · tmp2m — antillas_mayores
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · u10m — antillas_mayores
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · v10m — antillas_mayores
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio gs" tabindex="0" data-tip="cfsr · u10m — antillas_mayores
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfsr · v10m — antillas_mayores
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo gs" tabindex="0" data-tip="chirps · precip — antillas_mayores
+1981-01-01 → 2026-07-06
+16.623 días escritos
+esperado hasta 2026-07-06"><span class="g" aria-hidden="true">✓</span><span class="f">2026-07-06</span><span class="sr">completo</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirps-v3 · precip_rnl — antillas_mayores
+1981-01-01 → 1992-12-31
+4.383 días escritos
+esperado hasta 2026-07-06
+12240 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1992-12-31</span><span class="sr">parcial</span></td><td class="c c-vacio" tabindex="0" data-tip="chirps-v3 · precip_sat — antillas_mayores
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirts · tmax — antillas_mayores
+1983-01-01 → 1989-01-15
+2.207 días escritos
+esperado hasta 2016-12-31
+10212 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1989-01-15</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="chirts · tmin — antillas_mayores
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-completo gs" tabindex="0" data-tip="era5 · t2m_mean — antillas_mayores
+1981-01-01 → 2026-08-14
+16.662 días escritos
+esperado hasta 2026-08-14"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-14</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · t2m_max — antillas_mayores
+1981-01-01 → 2026-08-14
+16.662 días escritos
+esperado hasta 2026-08-14"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-14</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · t2m_min — antillas_mayores
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · precip_sum — antillas_mayores
+1981-01-01 → 2026-08-13
+16.660 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · ssrd_sum — antillas_mayores
+1981-01-01 → 2026-06-29
+16.616 días escritos
+esperado hasta 2026-08-14
+46 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-29</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · swvl1 — antillas_mayores
+1981-01-01 → 2026-06-30
+16.617 días escritos
+esperado hasta 2026-08-14
+45 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-30</span><span class="sr">parcial</span></td></tr><tr><th class="esc" scope="row"><span class="esc-n">antillas_menores</span><span class="esc-t">grupo</span></th><td class="c c-vacio gs" tabindex="0" data-tip="cfs · tmp2m — antillas_menores
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · u10m — antillas_menores
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · v10m — antillas_menores
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio gs" tabindex="0" data-tip="cfsr · u10m — antillas_menores
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfsr · v10m — antillas_menores
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo gs" tabindex="0" data-tip="chirps · precip — antillas_menores
+1981-01-01 → 2026-07-06
+16.623 días escritos
+esperado hasta 2026-07-06"><span class="g" aria-hidden="true">✓</span><span class="f">2026-07-06</span><span class="sr">completo</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirps-v3 · precip_rnl — antillas_menores
+1981-01-01 → 1992-12-31
+4.383 días escritos
+esperado hasta 2026-07-06
+12240 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1992-12-31</span><span class="sr">parcial</span></td><td class="c c-vacio" tabindex="0" data-tip="chirps-v3 · precip_sat — antillas_menores
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirts · tmax — antillas_menores
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="chirts · tmin — antillas_menores
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-completo gs" tabindex="0" data-tip="era5 · t2m_mean — antillas_menores
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · t2m_max — antillas_menores
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · t2m_min — antillas_menores
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · precip_sum — antillas_menores
+1981-01-01 → 2026-08-13
+16.660 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · ssrd_sum — antillas_menores
+1981-01-01 → 2026-06-29
+16.616 días escritos
+esperado hasta 2026-08-14
+46 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-29</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · swvl1 — antillas_menores
+1981-01-01 → 2026-06-30
+16.617 días escritos
+esperado hasta 2026-08-14
+45 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-30</span><span class="sr">parcial</span></td></tr><tr><th class="esc" scope="row"><span class="esc-n">colombia</span><span class="esc-t">pais</span></th><td class="c c-vacio gs" tabindex="0" data-tip="cfs · tmp2m — colombia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · u10m — colombia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · v10m — colombia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio gs" tabindex="0" data-tip="cfsr · u10m — colombia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfsr · v10m — colombia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo gs" tabindex="0" data-tip="chirps · precip — colombia
+1981-01-01 → 2026-07-06
+16.623 días escritos
+esperado hasta 2026-07-06"><span class="g" aria-hidden="true">✓</span><span class="f">2026-07-06</span><span class="sr">completo</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirps-v3 · precip_rnl — colombia
+1981-01-01 → 1992-12-31
+4.383 días escritos
+esperado hasta 2026-07-06
+12240 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1992-12-31</span><span class="sr">parcial</span></td><td class="c c-vacio" tabindex="0" data-tip="chirps-v3 · precip_sat — colombia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirts · tmax — colombia
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="chirts · tmin — colombia
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-completo gs" tabindex="0" data-tip="era5 · t2m_mean — colombia
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · t2m_max — colombia
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · t2m_min — colombia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · precip_sum — colombia
+1981-01-01 → 2026-08-13
+16.660 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · ssrd_sum — colombia
+1981-01-01 → 2026-06-29
+16.616 días escritos
+esperado hasta 2026-08-14
+46 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-29</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · swvl1 — colombia
+1981-01-01 → 2026-06-30
+16.617 días escritos
+esperado hasta 2026-08-14
+45 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-30</span><span class="sr">parcial</span></td></tr><tr><th class="esc" scope="row"><span class="esc-n">venezuela</span><span class="esc-t">pais</span></th><td class="c c-vacio gs" tabindex="0" data-tip="cfs · tmp2m — venezuela
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · u10m — venezuela
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · v10m — venezuela
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio gs" tabindex="0" data-tip="cfsr · u10m — venezuela
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfsr · v10m — venezuela
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo gs" tabindex="0" data-tip="chirps · precip — venezuela
+1981-01-01 → 2026-07-06
+16.623 días escritos
+esperado hasta 2026-07-06"><span class="g" aria-hidden="true">✓</span><span class="f">2026-07-06</span><span class="sr">completo</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirps-v3 · precip_rnl — venezuela
+1981-01-01 → 1992-12-31
+4.383 días escritos
+esperado hasta 2026-07-06
+12240 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1992-12-31</span><span class="sr">parcial</span></td><td class="c c-vacio" tabindex="0" data-tip="chirps-v3 · precip_sat — venezuela
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirts · tmax — venezuela
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="chirts · tmin — venezuela
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-completo gs" tabindex="0" data-tip="era5 · t2m_mean — venezuela
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · t2m_max — venezuela
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · t2m_min — venezuela
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · precip_sum — venezuela
+1981-01-01 → 2026-08-13
+16.660 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · ssrd_sum — venezuela
+1981-01-01 → 1986-12-31
+2.191 días escritos
+esperado hasta 2026-08-14
+14471 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1986-12-31</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · swvl1 — venezuela
+1981-01-01 → 2026-06-30
+16.617 días escritos
+esperado hasta 2026-08-14
+45 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-30</span><span class="sr">parcial</span></td></tr><tr><th class="esc" scope="row"><span class="esc-n">guayanas</span><span class="esc-t">grupo</span></th><td class="c c-vacio gs" tabindex="0" data-tip="cfs · tmp2m — guayanas
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · u10m — guayanas
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · v10m — guayanas
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio gs" tabindex="0" data-tip="cfsr · u10m — guayanas
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfsr · v10m — guayanas
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo gs" tabindex="0" data-tip="chirps · precip — guayanas
+1981-01-01 → 2026-07-06
+16.623 días escritos
+esperado hasta 2026-07-06"><span class="g" aria-hidden="true">✓</span><span class="f">2026-07-06</span><span class="sr">completo</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirps-v3 · precip_rnl — guayanas
+1981-01-01 → 1992-12-31
+4.383 días escritos
+esperado hasta 2026-07-06
+12240 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1992-12-31</span><span class="sr">parcial</span></td><td class="c c-vacio" tabindex="0" data-tip="chirps-v3 · precip_sat — guayanas
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirts · tmax — guayanas
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="chirts · tmin — guayanas
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-completo gs" tabindex="0" data-tip="era5 · t2m_mean — guayanas
+1981-01-01 → 2026-08-14
+16.662 días escritos
+esperado hasta 2026-08-14"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-14</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · t2m_max — guayanas
+1981-01-01 → 2026-08-14
+16.662 días escritos
+esperado hasta 2026-08-14"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-14</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · t2m_min — guayanas
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · precip_sum — guayanas
+1981-01-01 → 2026-08-14
+16.661 días escritos
+esperado hasta 2026-08-14"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-14</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · ssrd_sum — guayanas
+2026-08-04 → 2026-08-14
+11 días escritos
+esperado hasta 2026-08-14"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-14</span><span class="sr">completo</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · swvl1 — guayanas
+1981-01-01 → 2026-06-30
+16.617 días escritos
+esperado hasta 2026-08-14
+45 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-30</span><span class="sr">parcial</span></td></tr><tr><th class="esc" scope="row"><span class="esc-n">ecuador_galapagos</span><span class="esc-t">pais</span></th><td class="c c-vacio gs" tabindex="0" data-tip="cfs · tmp2m — ecuador_galapagos
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · u10m — ecuador_galapagos
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · v10m — ecuador_galapagos
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio gs" tabindex="0" data-tip="cfsr · u10m — ecuador_galapagos
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfsr · v10m — ecuador_galapagos
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo gs" tabindex="0" data-tip="chirps · precip — ecuador_galapagos
+1981-01-01 → 2026-07-06
+16.623 días escritos
+esperado hasta 2026-07-06"><span class="g" aria-hidden="true">✓</span><span class="f">2026-07-06</span><span class="sr">completo</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirps-v3 · precip_rnl — ecuador_galapagos
+1981-01-01 → 1992-12-31
+4.383 días escritos
+esperado hasta 2026-07-06
+12240 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1992-12-31</span><span class="sr">parcial</span></td><td class="c c-vacio" tabindex="0" data-tip="chirps-v3 · precip_sat — ecuador_galapagos
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirts · tmax — ecuador_galapagos
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="chirts · tmin — ecuador_galapagos
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-completo gs" tabindex="0" data-tip="era5 · t2m_mean — ecuador_galapagos
+1981-01-01 → 2026-08-14
+16.662 días escritos
+esperado hasta 2026-08-14"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-14</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · t2m_max — ecuador_galapagos
+1981-01-01 → 2026-08-14
+16.662 días escritos
+esperado hasta 2026-08-14"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-14</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · t2m_min — ecuador_galapagos
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · precip_sum — ecuador_galapagos
+1981-01-01 → 2026-08-13
+16.660 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · ssrd_sum — ecuador_galapagos
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · swvl1 — ecuador_galapagos
+1981-01-01 → 2026-06-30
+16.617 días escritos
+esperado hasta 2026-08-14
+45 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-30</span><span class="sr">parcial</span></td></tr><tr><th class="esc" scope="row"><span class="esc-n">peru</span><span class="esc-t">pais</span></th><td class="c c-vacio gs" tabindex="0" data-tip="cfs · tmp2m — peru
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · u10m — peru
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · v10m — peru
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio gs" tabindex="0" data-tip="cfsr · u10m — peru
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfsr · v10m — peru
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo gs" tabindex="0" data-tip="chirps · precip — peru
+1981-01-01 → 2026-07-06
+16.623 días escritos
+esperado hasta 2026-07-06"><span class="g" aria-hidden="true">✓</span><span class="f">2026-07-06</span><span class="sr">completo</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirps-v3 · precip_rnl — peru
+1981-01-01 → 2020-01-02
+4.384 días escritos
+esperado hasta 2026-07-06
+9862 días sueltos sin escribir
+2377 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2020-01-02</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="chirps-v3 · precip_sat — peru
+2020-01-01 → 2020-01-02
+2 días escritos
+esperado hasta 2026-07-06
+2377 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2020-01-02</span><span class="sr">parcial</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirts · tmax — peru
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="chirts · tmin — peru
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-completo gs" tabindex="0" data-tip="era5 · t2m_mean — peru
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · t2m_max — peru
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · t2m_min — peru
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · precip_sum — peru
+1981-01-01 → 2026-08-13
+16.660 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · ssrd_sum — peru
+2024-01-01 → 2024-02-29
+60 días escritos
+esperado hasta 2026-08-14
+897 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2024-02-29</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · swvl1 — peru
+1981-01-01 → 2026-06-30
+16.617 días escritos
+esperado hasta 2026-08-14
+45 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-30</span><span class="sr">parcial</span></td></tr><tr><th class="esc" scope="row"><span class="esc-n">bolivia</span><span class="esc-t">pais</span></th><td class="c c-parcial gs" tabindex="0" data-tip="cfs · tmp2m — bolivia
+2011-04-01 → 2025-04-30
+5.083 días escritos
+esperado hasta 2026-07-21
+447 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2025-04-30</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="cfs · u10m — bolivia
+2011-04-01 → 2026-03-31
+4.991 días escritos
+esperado hasta 2026-07-21
+112 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-03-31</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="cfs · v10m — bolivia
+2011-04-01 → 2026-03-31
+5.022 días escritos
+esperado hasta 2026-07-21
+112 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-03-31</span><span class="sr">parcial</span></td><td class="c c-vacio gs" tabindex="0" data-tip="cfsr · u10m — bolivia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfsr · v10m — bolivia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo gs" tabindex="0" data-tip="chirps · precip — bolivia
+1981-01-01 → 2026-07-06
+16.623 días escritos
+esperado hasta 2026-07-06"><span class="g" aria-hidden="true">✓</span><span class="f">2026-07-06</span><span class="sr">completo</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirps-v3 · precip_rnl — bolivia
+1981-01-01 → 1992-12-31
+4.383 días escritos
+esperado hasta 2026-07-06
+12240 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1992-12-31</span><span class="sr">parcial</span></td><td class="c c-vacio" tabindex="0" data-tip="chirps-v3 · precip_sat — bolivia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirts · tmax — bolivia
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="chirts · tmin — bolivia
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-completo gs" tabindex="0" data-tip="era5 · t2m_mean — bolivia
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · t2m_max — bolivia
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · t2m_min — bolivia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · precip_sum — bolivia
+1981-01-01 → 2026-08-13
+16.660 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · ssrd_sum — bolivia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · swvl1 — bolivia
+1981-01-01 → 2026-06-30
+16.617 días escritos
+esperado hasta 2026-08-14
+45 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-30</span><span class="sr">parcial</span></td></tr><tr><th class="esc" scope="row"><span class="esc-n">brasil_amazonia</span><span class="esc-t">region</span></th><td class="c c-vacio gs" tabindex="0" data-tip="cfs · tmp2m — brasil_amazonia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · u10m — brasil_amazonia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · v10m — brasil_amazonia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio gs" tabindex="0" data-tip="cfsr · u10m — brasil_amazonia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfsr · v10m — brasil_amazonia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo gs" tabindex="0" data-tip="chirps · precip — brasil_amazonia
+1981-01-01 → 2026-07-06
+16.623 días escritos
+esperado hasta 2026-07-06"><span class="g" aria-hidden="true">✓</span><span class="f">2026-07-06</span><span class="sr">completo</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirps-v3 · precip_rnl — brasil_amazonia
+1981-01-01 → 1992-12-31
+4.383 días escritos
+esperado hasta 2026-07-06
+12240 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1992-12-31</span><span class="sr">parcial</span></td><td class="c c-vacio" tabindex="0" data-tip="chirps-v3 · precip_sat — brasil_amazonia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirts · tmax — brasil_amazonia
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="chirts · tmin — brasil_amazonia
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-completo gs" tabindex="0" data-tip="era5 · t2m_mean — brasil_amazonia
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · t2m_max — brasil_amazonia
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · t2m_min — brasil_amazonia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · precip_sum — brasil_amazonia
+1981-01-01 → 2026-08-13
+16.660 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · ssrd_sum — brasil_amazonia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · swvl1 — brasil_amazonia
+1981-01-01 → 2026-06-30
+16.617 días escritos
+esperado hasta 2026-08-14
+45 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-30</span><span class="sr">parcial</span></td></tr><tr><th class="esc" scope="row"><span class="esc-n">brasil_nordeste</span><span class="esc-t">region</span></th><td class="c c-vacio gs" tabindex="0" data-tip="cfs · tmp2m — brasil_nordeste
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · u10m — brasil_nordeste
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · v10m — brasil_nordeste
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio gs" tabindex="0" data-tip="cfsr · u10m — brasil_nordeste
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfsr · v10m — brasil_nordeste
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo gs" tabindex="0" data-tip="chirps · precip — brasil_nordeste
+1981-01-01 → 2026-07-06
+16.623 días escritos
+esperado hasta 2026-07-06"><span class="g" aria-hidden="true">✓</span><span class="f">2026-07-06</span><span class="sr">completo</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirps-v3 · precip_rnl — brasil_nordeste
+1981-01-01 → 1992-11-26
+4.348 días escritos
+esperado hasta 2026-07-06
+12275 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1992-11-26</span><span class="sr">parcial</span></td><td class="c c-vacio" tabindex="0" data-tip="chirps-v3 · precip_sat — brasil_nordeste
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirts · tmax — brasil_nordeste
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="chirts · tmin — brasil_nordeste
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-completo gs" tabindex="0" data-tip="era5 · t2m_mean — brasil_nordeste
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · t2m_max — brasil_nordeste
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · t2m_min — brasil_nordeste
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · precip_sum — brasil_nordeste
+1981-01-01 → 2026-08-13
+16.660 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · ssrd_sum — brasil_nordeste
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · swvl1 — brasil_nordeste
+1981-01-01 → 2026-06-30
+16.617 días escritos
+esperado hasta 2026-08-14
+45 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-30</span><span class="sr">parcial</span></td></tr><tr><th class="esc" scope="row"><span class="esc-n">brasil_centro_sudeste</span><span class="esc-t">region</span></th><td class="c c-vacio gs" tabindex="0" data-tip="cfs · tmp2m — brasil_centro_sudeste
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · u10m — brasil_centro_sudeste
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · v10m — brasil_centro_sudeste
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio gs" tabindex="0" data-tip="cfsr · u10m — brasil_centro_sudeste
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfsr · v10m — brasil_centro_sudeste
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo gs" tabindex="0" data-tip="chirps · precip — brasil_centro_sudeste
+1981-01-01 → 2026-07-06
+16.623 días escritos
+esperado hasta 2026-07-06"><span class="g" aria-hidden="true">✓</span><span class="f">2026-07-06</span><span class="sr">completo</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirps-v3 · precip_rnl — brasil_centro_sudeste
+1981-01-01 → 1991-12-31
+4.017 días escritos
+esperado hasta 2026-07-06
+12606 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1991-12-31</span><span class="sr">parcial</span></td><td class="c c-vacio" tabindex="0" data-tip="chirps-v3 · precip_sat — brasil_centro_sudeste
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirts · tmax — brasil_centro_sudeste
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="chirts · tmin — brasil_centro_sudeste
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-completo gs" tabindex="0" data-tip="era5 · t2m_mean — brasil_centro_sudeste
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · t2m_max — brasil_centro_sudeste
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · t2m_min — brasil_centro_sudeste
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · precip_sum — brasil_centro_sudeste
+1981-01-01 → 2026-08-13
+16.660 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · ssrd_sum — brasil_centro_sudeste
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · swvl1 — brasil_centro_sudeste
+1981-01-01 → 2026-06-30
+16.617 días escritos
+esperado hasta 2026-08-14
+45 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-30</span><span class="sr">parcial</span></td></tr><tr><th class="esc" scope="row"><span class="esc-n">brasil_sur</span><span class="esc-t">region</span></th><td class="c c-vacio gs" tabindex="0" data-tip="cfs · tmp2m — brasil_sur
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · u10m — brasil_sur
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · v10m — brasil_sur
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio gs" tabindex="0" data-tip="cfsr · u10m — brasil_sur
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfsr · v10m — brasil_sur
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo gs" tabindex="0" data-tip="chirps · precip — brasil_sur
+1981-01-01 → 2026-07-06
+16.623 días escritos
+esperado hasta 2026-07-06"><span class="g" aria-hidden="true">✓</span><span class="f">2026-07-06</span><span class="sr">completo</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirps-v3 · precip_rnl — brasil_sur
+1981-01-01 → 1991-12-31
+4.017 días escritos
+esperado hasta 2026-07-06
+12606 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1991-12-31</span><span class="sr">parcial</span></td><td class="c c-vacio" tabindex="0" data-tip="chirps-v3 · precip_sat — brasil_sur
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirts · tmax — brasil_sur
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="chirts · tmin — brasil_sur
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-completo gs" tabindex="0" data-tip="era5 · t2m_mean — brasil_sur
+1981-01-01 → 2026-08-14
+16.662 días escritos
+esperado hasta 2026-08-14"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-14</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · t2m_max — brasil_sur
+1981-01-01 → 2026-08-14
+16.662 días escritos
+esperado hasta 2026-08-14"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-14</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · t2m_min — brasil_sur
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · precip_sum — brasil_sur
+1981-01-01 → 2026-08-14
+16.661 días escritos
+esperado hasta 2026-08-14"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-14</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · ssrd_sum — brasil_sur
+2026-08-04 → 2026-08-14
+11 días escritos
+esperado hasta 2026-08-14"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-14</span><span class="sr">completo</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · swvl1 — brasil_sur
+1981-01-01 → 2026-06-30
+16.617 días escritos
+esperado hasta 2026-08-14
+45 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-30</span><span class="sr">parcial</span></td></tr><tr><th class="esc" scope="row"><span class="esc-n">paraguay</span><span class="esc-t">pais</span></th><td class="c c-vacio gs" tabindex="0" data-tip="cfs · tmp2m — paraguay
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · u10m — paraguay
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · v10m — paraguay
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio gs" tabindex="0" data-tip="cfsr · u10m — paraguay
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfsr · v10m — paraguay
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo gs" tabindex="0" data-tip="chirps · precip — paraguay
+1981-01-01 → 2026-07-06
+16.623 días escritos
+esperado hasta 2026-07-06"><span class="g" aria-hidden="true">✓</span><span class="f">2026-07-06</span><span class="sr">completo</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirps-v3 · precip_rnl — paraguay
+1981-01-01 → 1991-12-31
+4.017 días escritos
+esperado hasta 2026-07-06
+12606 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1991-12-31</span><span class="sr">parcial</span></td><td class="c c-vacio" tabindex="0" data-tip="chirps-v3 · precip_sat — paraguay
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirts · tmax — paraguay
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="chirts · tmin — paraguay
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-completo gs" tabindex="0" data-tip="era5 · t2m_mean — paraguay
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · t2m_max — paraguay
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · t2m_min — paraguay
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · precip_sum — paraguay
+1981-01-01 → 2026-08-13
+16.660 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · ssrd_sum — paraguay
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · swvl1 — paraguay
+1981-01-01 → 2026-06-30
+16.617 días escritos
+esperado hasta 2026-08-14
+45 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-30</span><span class="sr">parcial</span></td></tr><tr><th class="esc" scope="row"><span class="esc-n">uruguay</span><span class="esc-t">pais</span></th><td class="c c-vacio gs" tabindex="0" data-tip="cfs · tmp2m — uruguay
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · u10m — uruguay
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · v10m — uruguay
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio gs" tabindex="0" data-tip="cfsr · u10m — uruguay
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfsr · v10m — uruguay
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo gs" tabindex="0" data-tip="chirps · precip — uruguay
+1981-01-01 → 2026-07-06
+16.623 días escritos
+esperado hasta 2026-07-06"><span class="g" aria-hidden="true">✓</span><span class="f">2026-07-06</span><span class="sr">completo</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirps-v3 · precip_rnl — uruguay
+1981-01-01 → 1991-12-31
+4.017 días escritos
+esperado hasta 2026-07-06
+12606 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1991-12-31</span><span class="sr">parcial</span></td><td class="c c-vacio" tabindex="0" data-tip="chirps-v3 · precip_sat — uruguay
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirts · tmax — uruguay
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="chirts · tmin — uruguay
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-completo gs" tabindex="0" data-tip="era5 · t2m_mean — uruguay
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · t2m_max — uruguay
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · t2m_min — uruguay
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · precip_sum — uruguay
+1981-01-01 → 2026-08-13
+16.660 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · ssrd_sum — uruguay
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · swvl1 — uruguay
+1981-01-01 → 2026-06-30
+16.617 días escritos
+esperado hasta 2026-08-14
+45 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-30</span><span class="sr">parcial</span></td></tr><tr><th class="esc" scope="row"><span class="esc-n">chile_norte_centro</span><span class="esc-t">region</span></th><td class="c c-vacio gs" tabindex="0" data-tip="cfs · tmp2m — chile_norte_centro
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · u10m — chile_norte_centro
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · v10m — chile_norte_centro
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio gs" tabindex="0" data-tip="cfsr · u10m — chile_norte_centro
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfsr · v10m — chile_norte_centro
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo gs" tabindex="0" data-tip="chirps · precip — chile_norte_centro
+1981-01-01 → 2026-07-06
+16.623 días escritos
+esperado hasta 2026-07-06"><span class="g" aria-hidden="true">✓</span><span class="f">2026-07-06</span><span class="sr">completo</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirps-v3 · precip_rnl — chile_norte_centro
+1981-01-01 → 1991-12-31
+4.017 días escritos
+esperado hasta 2026-07-06
+12606 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1991-12-31</span><span class="sr">parcial</span></td><td class="c c-vacio" tabindex="0" data-tip="chirps-v3 · precip_sat — chile_norte_centro
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirts · tmax — chile_norte_centro
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="chirts · tmin — chile_norte_centro
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-completo gs" tabindex="0" data-tip="era5 · t2m_mean — chile_norte_centro
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · t2m_max — chile_norte_centro
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · t2m_min — chile_norte_centro
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · precip_sum — chile_norte_centro
+1981-01-01 → 2026-08-13
+16.660 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · ssrd_sum — chile_norte_centro
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · swvl1 — chile_norte_centro
+1981-01-01 → 2026-06-30
+16.617 días escritos
+esperado hasta 2026-08-14
+45 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-30</span><span class="sr">parcial</span></td></tr><tr><th class="esc" scope="row"><span class="esc-n">argentina_norte</span><span class="esc-t">region</span></th><td class="c c-vacio gs" tabindex="0" data-tip="cfs · tmp2m — argentina_norte
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · u10m — argentina_norte
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · v10m — argentina_norte
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio gs" tabindex="0" data-tip="cfsr · u10m — argentina_norte
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfsr · v10m — argentina_norte
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo gs" tabindex="0" data-tip="chirps · precip — argentina_norte
+1981-01-01 → 2026-07-06
+16.623 días escritos
+esperado hasta 2026-07-06"><span class="g" aria-hidden="true">✓</span><span class="f">2026-07-06</span><span class="sr">completo</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirps-v3 · precip_rnl — argentina_norte
+1981-01-01 → 1991-12-31
+4.017 días escritos
+esperado hasta 2026-07-06
+12606 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1991-12-31</span><span class="sr">parcial</span></td><td class="c c-vacio" tabindex="0" data-tip="chirps-v3 · precip_sat — argentina_norte
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirts · tmax — argentina_norte
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="chirts · tmin — argentina_norte
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-completo gs" tabindex="0" data-tip="era5 · t2m_mean — argentina_norte
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · t2m_max — argentina_norte
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · t2m_min — argentina_norte
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · precip_sum — argentina_norte
+1981-01-01 → 2026-08-13
+16.660 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · ssrd_sum — argentina_norte
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · swvl1 — argentina_norte
+1981-01-01 → 2026-06-30
+16.617 días escritos
+esperado hasta 2026-08-14
+45 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-30</span><span class="sr">parcial</span></td></tr><tr><th class="esc" scope="row"><span class="esc-n">patagonia</span><span class="esc-t">region</span></th><td class="c c-vacio gs" tabindex="0" data-tip="cfs · tmp2m — patagonia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · u10m — patagonia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · v10m — patagonia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio gs" tabindex="0" data-tip="cfsr · u10m — patagonia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfsr · v10m — patagonia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo gs" tabindex="0" data-tip="chirps · precip — patagonia
+1981-01-01 → 2026-07-06
+16.623 días escritos
+esperado hasta 2026-07-06"><span class="g" aria-hidden="true">✓</span><span class="f">2026-07-06</span><span class="sr">completo</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirps-v3 · precip_rnl — patagonia
+1981-01-01 → 1991-12-31
+4.011 días escritos
+esperado hasta 2026-07-06
+6 días sueltos sin escribir
+12606 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1991-12-31</span><span class="sr">parcial</span></td><td class="c c-vacio" tabindex="0" data-tip="chirps-v3 · precip_sat — patagonia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial gs" tabindex="0" data-tip="chirts · tmax — patagonia
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-parcial" tabindex="0" data-tip="chirts · tmin — patagonia
+1983-01-01 → 1988-12-31
+2.192 días escritos
+esperado hasta 2016-12-31
+10227 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">1988-12-31</span><span class="sr">parcial</span></td><td class="c c-completo gs" tabindex="0" data-tip="era5 · t2m_mean — patagonia
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · t2m_max — patagonia
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · t2m_min — patagonia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · precip_sum — patagonia
+1981-01-01 → 2026-08-13
+16.660 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · ssrd_sum — patagonia
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · swvl1 — patagonia
+1981-01-01 → 2026-06-30
+16.617 días escritos
+esperado hasta 2026-08-14
+45 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-30</span><span class="sr">parcial</span></td></tr><tr><th class="esc" scope="row"><span class="esc-n">nino34</span><span class="esc-t">indice</span></th><td class="c c-vacio gs" tabindex="0" data-tip="cfs · tmp2m — nino34
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · u10m — nino34
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfs · v10m — nino34
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio gs" tabindex="0" data-tip="cfsr · u10m — nino34
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="cfsr · v10m — nino34
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio gs" tabindex="0" data-tip="chirps · precip — nino34
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio gs" tabindex="0" data-tip="chirps-v3 · precip_rnl — nino34
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="chirps-v3 · precip_sat — nino34
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio gs" tabindex="0" data-tip="chirts · tmax — nino34
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-vacio" tabindex="0" data-tip="chirts · tmin — nino34
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo gs" tabindex="0" data-tip="era5 · t2m_mean — nino34
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · t2m_max — nino34
+1981-01-01 → 2026-08-13
+16.661 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-vacio" tabindex="0" data-tip="era5 · t2m_min — nino34
+Sin datos en S3"><span class="g" aria-hidden="true">·</span><span class="f">—</span><span class="sr">vacio</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · precip_sum — nino34
+1981-01-01 → 2026-08-13
+16.660 días escritos
+esperado hasta 2026-08-14
+1 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-13</span><span class="sr">completo</span></td><td class="c c-completo" tabindex="0" data-tip="era5 · ssrd_sum — nino34
+2026-08-09 → 2026-08-11
+3 días escritos
+esperado hasta 2026-08-14
+3 días de atraso"><span class="g" aria-hidden="true">✓</span><span class="f">2026-08-11</span><span class="sr">completo</span></td><td class="c c-parcial" tabindex="0" data-tip="era5 · swvl1 — nino34
+1981-01-01 → 2026-06-30
+16.617 días escritos
+esperado hasta 2026-08-14
+45 días de atraso"><span class="g" aria-hidden="true">◐</span><span class="f">2026-06-30</span><span class="sr">parcial</span></td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="sec-h">
+    <h2>Por qué cada fuente está como está</h2>
+    <p>El amarillo casi nunca significa que algo falló: significa un backfill pausado a
+    propósito, una fuente que publica con retraso, o una que se murió en el origen.</p>
+  </div>
+  <section class="notas"><div class="nota"><h3>cfs</h3><p class="nota-d">CFS operational analysis · NOAA NCEI · 0.20°</p><p>NCEI retiró la ruta de esta fuente en agosto 2026: el árbol <code>operational-analysis/time-series/</code> devuelve 404. Sólo hay datos de Bolivia y quedaron congelados. Además hay 450 días marcados como «faltan en origen» que son una misclasificación vieja y hay que limpiar antes de reintentar.</p></div><div class="nota"><h3>cfsr</h3><p class="nota-d">CFS reanalysis · NCAR GDEX · 0.31°</p><p>El dataset está configurado desde junio 2026 pero nunca se corrió: no existe el prefijo <code>cfsr/</code> en el bucket. Es un archivo cerrado 1979–2010, así que es un backfill de una sola vez.</p></div><div class="nota"><h3>chirps</h3><p class="nota-d">CHIRPS v2.0 · UCSB CHC · 0.05°</p><p>La fuente más al día del catálogo: entra completa al cron diario (las 20 escenas terrestres en ~2 minutos, porque es HTTP/GeoTIFF y no pasa por ninguna cola).</p></div><div class="nota"><h3>chirps-v3</h3><p class="nota-d">CHIRPS v3.0 · UCSB CHC · 0.05°</p><p>Backfill pausado a propósito el 23-jul para darle ancho de banda a CFS. Llegó hasta noviembre de 1992 de 46 años. <code>precip_sat</code> arranca en 2000, así que todavía no entró en juego.</p></div><div class="nota"><h3>chirts</h3><p class="nota-d">CHIRTS-daily v1.0 · UCSB CHC · 0.05°</p><p>Backfill pausado el 22-jul. Llegó hasta 1989 de un archivo que termina en 2016 — es el hueco más grande del catálogo: faltan 27 años en 20 escenas.</p></div><div class="nota"><h3>era5</h3><p class="nota-d">ERA5 daily statistics · Copernicus · 0.25°</p><p>El núcleo del pipeline y lo más sano que hay: 1981 en adelante, sin huecos interiores, y desde el 19-ago las 21 escenas entran en el cron diario, partidas en 3 grupos escalonados. El costo es el tiempo: cada escena espera 10–35 min por variable en la cola del CDS, así que un grupo de 7 escenas pasa las 4 horas. <code>swvl1</code> depende de las actualizaciones mensuales del mirror EDH, así que siempre va a ir un mes atrás.</p></div></section>
+
+  <footer>
+    Estado calculado contra los ledgers <code>_ledger/&lt;escena&gt;/&lt;variable&gt;.json</code> de cada cubo.<br>
+    «Al día» = la última fecha escrita está dentro de los 7 días de gracia sobre el retraso
+    de publicación propio de cada fuente.<br>
+    Regenerar con <code>python docs/gen_cobertura.py</code>.
+  </footer>
+</div>
+
+<div id="tip" role="status"></div>
+
+<script>
+const tg = document.getElementById('tg'), m = document.getElementById('m');
+tg.addEventListener('change', () => m.classList.toggle('fechas', tg.checked));
+
+const tip = document.getElementById('tip');
+function show(el) {
+  tip.textContent = el.dataset.tip;
+  tip.classList.add('on');
+  const r = el.getBoundingClientRect(), t = tip.getBoundingClientRect();
+  let x = r.left + r.width / 2 - t.width / 2;
+  x = Math.max(8, Math.min(x, innerWidth - t.width - 8));
+  let y = r.top - t.height - 9;
+  if (y < 8) y = r.bottom + 9;
+  tip.style.left = x + 'px'; tip.style.top = y + 'px';
+}
+function hide() { tip.classList.remove('on'); }
+for (const c of m.querySelectorAll('td.c')) {
+  c.addEventListener('mouseenter', () => show(c));
+  c.addEventListener('mouseleave', hide);
+  c.addEventListener('focus', () => show(c));
+  c.addEventListener('blur', hide);
+}
+</script>

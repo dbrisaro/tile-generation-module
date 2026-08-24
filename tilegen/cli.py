@@ -452,9 +452,12 @@ def chunks(config_dir, dataset, scene_names, stale, local_only):
               help="Skip re-reading the copy to check it. Faster, and you lose the safety net.")
 @click.option("--resume", is_flag=True,
               help="Reuse a {scene}.zarr.rechunk left by an interrupted run: verify and promote it.")
+@click.option("-y", "--yes", is_flag=True,
+              help="Do not ask for confirmation. Required to run unattended (cron).")
 @click.option("--local-only", is_flag=True, help="Operate on the workdir instead of S3.")
 @click.pass_obj
-def rechunk(config_dir, dataset, scene_names, dry_run, keep_old, no_verify, resume, local_only):
+def rechunk(config_dir, dataset, scene_names, dry_run, keep_old, no_verify, resume, yes,
+            local_only):
     """Rewrite cubes with the chunk shape config.yaml asks for.
 
     Builds a copy beside the original and only promotes it once verified, so an
@@ -492,7 +495,8 @@ def rechunk(config_dir, dataset, scene_names, dry_run, keep_old, no_verify, resu
         click.echo("\n--dry-run: no se toco nada.")
         return
 
-    click.confirm(f"\nReescribir {len(pend)} cubos? El cron tiene que estar parado.", abort=True)
+    if not yes:
+        click.confirm(f"\nReescribir {len(pend)} cubos? El cron tiene que estar parado.", abort=True)
     hechos, fallidos = 0, []
     for stem, scene, store, _, _ in pend:
         click.echo(f"-> {stem}/{scene}")

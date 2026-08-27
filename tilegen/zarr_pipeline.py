@@ -126,7 +126,10 @@ class ZarrPipeline:
                 fetched = {a.date for a in assets}
                 self.store.update_ledger(granule.variable, written=written,
                                          missing=set(granule.dates) - fetched)
-                if not self.keep_local:
+                # con shared_downloads el archivo cubre TODAS las escenas: borrarlo
+                # acá obligaría a la escena siguiente a volver a pedirlo al CDS,
+                # que es justamente el costo que la ventana común viene a evitar.
+                if not self.keep_local and not self.source.shared_downloads:
                     for p in {a.path for a in assets}:
                         p.unlink(missing_ok=True)
                 with lock:

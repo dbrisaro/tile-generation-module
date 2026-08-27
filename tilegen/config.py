@@ -84,6 +84,11 @@ class DatasetCfg(BaseModel):
     lag_days: int = 0
     nodata: Optional[float] = None
     tile_size_deg: Optional[int] = None
+    # Ventana única [minx, miny, maxx, maxy] que se le pide a la fuente, en vez
+    # de una por escena. Para APIs con cola (CDS) el costo está en la CANTIDAD de
+    # pedidos, no en su tamaño: pedir una caja que cubra todas las escenas y
+    # recortarlas localmente cambia ~8000 pedidos por ~380. Ver sources/era5.py.
+    cds_fetch_area: Optional[list[float]] = None
     variables: dict[str, VariableCfg]
 
 

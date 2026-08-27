@@ -36,6 +36,13 @@ class DataSource(ABC):
     #: whether granules can be fetched concurrently (False for queued APIs like CDS)
     parallel_fetch = True
 
+    #: si el archivo descargado sirve para MÁS de una escena, el pipeline no lo
+    #: borra al terminar el gránulo: la escena siguiente lo lee del disco en vez
+    #: de volver a pedirlo. Sólo lo pone en True una fuente que descarga una
+    #: ventana común a todas las escenas (ver Era5CdsSource.cds_fetch_area).
+    #: Contrapartida: los archivos quedan en workdir/downloads y hay que podarlos.
+    shared_downloads = False
+
     def __init__(self, cfg: DatasetCfg, workdir: Path):
         self.cfg = cfg
         self.workdir = workdir

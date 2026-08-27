@@ -212,7 +212,9 @@ class Pipeline:
                         stats["uploaded"] += len(produced)
                         stats["skipped_existing"] += len(self.tiles) - len(todo)
                         stats["skipped_empty"] += len(todo) - len(produced)
-                if not self.keep_local:
+                # ver la nota en zarr_pipeline: con una ventana compartida entre
+                # escenas, borrar acá obliga a volver a pedirla.
+                if not self.keep_local and not self.source.shared_downloads:
                     for p in {a.path for a in assets}:
                         p.unlink(missing_ok=True)
                 log.info("done %s", granule.key)

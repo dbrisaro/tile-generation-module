@@ -6,6 +6,16 @@ temporal: daily
 start: 1940-01-01
 lag_days: 6           # ERA5T is available ~5 days behind real time
 cds_dataset: derived-era5-single-levels-daily-statistics
+# Ventana ÚNICA que se le pide al CDS, en vez de una por escena. Calculada como
+# la caja que cubre las 21 escenas de scenes.yaml (el extremo oeste es nino34 en
+# -170, el este brasil_nordeste en -32). El recorte por escena se hace local.
+#
+# Por qué: la cola del CDS cobra por PEDIDO (~20 min cada uno), no por tamaño.
+# Con una ventana por escena un backfill de 380 meses son ~8.000 pedidos; con
+# ésta son 380, y las otras 20 escenas leen el mismo archivo del disco.
+# Cuesta ~25 MB por mes (5x menos que pedir global) -> ~10 GB por un backfill
+# de 380 meses, que después se pueden podar de .work/downloads/era5/.
+cds_fetch_area: [-170, -57, -32, 35]
 edh_store: https://api.earthdatahub.destine.eu/era5/era5-single-levels-atmosphere-daily-utc-v0.zarr
 edh_hourly_store: https://api.earthdatahub.destine.eu/era5/era5-single-levels-atmosphere-v0.zarr
 variables:
@@ -50,6 +60,22 @@ variables:
     edh_hourly_variable: ssrd
     edh_hourly_statistic: sum
     units: J m-2
+  fg10_max:
+    # ráfaga máxima diaria de viento a 10 m, en m/s.
+    #
+    # `fg10` en ERA5 es "maximum 10m wind gust SINCE PREVIOUS POST-PROCESSING",
+    # o sea que cada valor horario ya es el máximo de esa hora. La máxima del día
+    # es entonces el máximo de las 24 horas -> daily_maximum. Ojo de no
+    # confundirla con `i10fg` (instantaneous_10m_wind_gust), que es la ráfaga
+    # instantánea en la hora exacta y da valores más bajos.
+    #
+    # NO tiene mapeo EDH a propósito: el mirror horario de EDH no publica
+    # ninguna variable de ráfaga (tiene u10/v10 y nada más), verificado contra
+    # el store el 2026-08-26. Así que esta variable va SOLO por CDS, que es la
+    # ruta con cola -> el histórico es caro, ver .work/backfill_fg10.sh.
+    cds_variable: 10m_wind_gust_since_previous_post_processing
+    daily_statistic: daily_maximum
+    units: m s-1
   swvl1:
     # volumetric soil water layer 1 (soil moisture, 0-7cm). Only in the hourly
     # EDH store -> daily MEAN aggregated locally. No cds_variable on purpose:

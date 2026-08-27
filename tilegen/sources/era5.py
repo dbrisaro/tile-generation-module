@@ -7,6 +7,20 @@ sequential (parallel_fetch = False) to be polite with the queue.
 
 If the pipeline runs with a bbox, it sets ``self.area`` (tile-aligned) and
 only that window is requested from CDS — much faster than global.
+
+VENTANA COMPARTIDA (``cds_fetch_area`` en el YAML del dataset)
+-------------------------------------------------------------
+Con ``area`` por escena, un backfill largo hace un pedido por (variable, mes) y
+**por escena**: 380 meses x 21 escenas = ~8.000 pedidos. La cola del CDS tarda
+~20 min por pedido haga lo que haga, así que el costo está en la CANTIDAD de
+pedidos y no en su tamaño — ningún paralelismo lo arregla (medido el 26-ago-2026
+con fg10_max: 3 gránulos/hora, ~110 días proyectados).
+
+Con ``cds_fetch_area`` se pide UNA ventana que cubre todas las escenas y el
+recorte a cada escena se hace local, en ``asset_to_dataarray``. Son 380 pedidos
+en vez de 8.000. El archivo se cachea por nombre (el tag lleva la ventana), así
+que la primera escena lo baja y las otras 20 lo leen del disco. Para que exista
+cuando llegan, ``shared_downloads`` le dice al pipeline que no lo borre.
 """
 from __future__ import annotations
 
@@ -38,6 +52,16 @@ class Era5CdsSource(DataSource):
     parallel_fetch = False
     area = None  # (minx, miny, maxx, maxy), set by the pipeline when using --bbox
 
+    @property
+    def fetch_area(self):
+        """La ventana que se le pide al CDS: la común si está configurada."""
+        shared = self.cfg.cds_fetch_area
+        return tuple(shared) if shared else self.area
+
+    @property
+    def shared_downloads(self):
+        return self.cfg.cds_fetch_area is not None
+
     def granules(self, variables, dates):
         out = []
         for v in variables:
@@ -51,7 +75,10 @@ class Era5CdsSource(DataSource):
         v = granule.variable
         vcfg = self.cfg.variables[v]
         y, m = granule.dates[0].year, granule.dates[0].month
-        tag = "" if self.area is None else "_" + "_".join(str(int(x)) for x in self.area)
+        area = self.fetch_area
+        # el tag lleva la ventana -> con cds_fetch_area todas las escenas apuntan
+        # al MISMO archivo, así que la primera lo baja y el resto lo cachea.
+        tag = "" if area is None else "_" + "_".join(str(int(x)) for x in area)
         target = self.workdir / f"era5_{v}_{y}{m:02d}{tag}.nc"
         if not target.exists():
             request = {
@@ -64,8 +91,8 @@ class Era5CdsSource(DataSource):
                 "month": [f"{m:02d}"],
                 "day": [f"{d.day:02d}" for d in granule.dates],
             }
-            if self.area is not None:
-                minx, miny, maxx, maxy = self.area
+            if area is not None:
+                minx, miny, maxx, maxy = area
                 request["area"] = [maxy, minx, miny, maxx]  # N, W, S, E
             log.info("CDS request %s (may sit in the queue for a while)", granule.key)
             cdsapi.Client(quiet=True).retrieve(self.cfg.cds_dataset, request, str(target))

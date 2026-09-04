@@ -1,0 +1,48 @@
+name: era5-land
+version: daily-stats
+description: ERA5-Land daily statistics, 0.1° SOLO TIERRA (Copernicus CDS + mirror EDH). Grilla distinta a era5 (0.25°), por eso es un dataset aparte y no variables nuevas de era5 — igual que cfs vs cfsr.
+source: era5_cds      # near-real-time; el backfill va por el mirror con --source era5_edh
+temporal: daily
+start: 1950-01-01
+lag_days: 6
+cds_dataset: derived-era5-land-daily-statistics
+# OJO: este derived NO publica product_type (no hay ensemble en ERA5-Land), a
+# diferencia del de single-levels. Por eso acá NO va cds_product_type: mandarlo
+# rompe el pedido. Ver sources/era5.py.
+#
+# Tampoco ofrece daily_sum — sólo mean/minimum/maximum. O sea que las
+# acumuladas (precipitación, deshielo) NO se pueden pedir por esta ruta; para
+# ésas hay que agregar desde el store horario de EDH.
+cds_fetch_area: [-170, -57, -32, 35]
+# El mirror es SÓLO horario (no hay store diario de ERA5-Land en EDH), así que
+# todo se promedia localmente sobre las 24 horas.
+# Cobertura verificada contra el store el 2026-09-04:
+#   lat  -57.10 .. 90.00   (paso 0.1)   <- justo cubre patagonia, que llega a -57
+#   lon    0.00 .. 359.90  (0..360; el recorte del source ya lo contempla)
+#   tiempo 1950-01-01 .. 2026-07-31
+edh_hourly_store: https://api.earthdatahub.destine.eu/era5/era5-land-v0.zarr
+variables:
+  snowc_mean:
+    # COBERTURA DE NIEVE: qué porcentaje de la celda tiene nieve, 0-100 %.
+    #
+    # Contesta una pregunta distinta a la de sd_mean/rsn_mean en `era5`: no
+    # cuánta nieve hay, sino cuánto suelo está tapado. Una celda puede tener
+    # poca nieve bien repartida (snowc alto, sd bajo) o mucha nieve concentrada
+    # en la parte alta (snowc bajo, sd alto). Para "¿hay nieve acá?" es la
+    # variable directa; para agua disponible sigue siendo sd.
+    #
+    # NO EXISTE EN era5: el derived de single-levels no publica snow_cover (su
+    # grupo Snow tiene snowfall, snowmelt, snow_depth, snow_density, snow_albedo
+    # y poco más), y el mirror horario de single-levels tampoco la trae —
+    # verificado contra los dos el 2026-09-04. Sólo está en ERA5-Land, y esa es
+    # la razón por la que este dataset existe.
+    cds_variable: snow_cover
+    daily_statistic: daily_mean
+    edh_hourly_variable: snowc
+    edh_hourly_statistic: mean
+    units: '%'
+    # El mirror publica una vez por mes y va ~2 meses atrás. Con el horizonte
+    # por defecto (lag_days + 30 = 36) el ledger daría por inexistente todo lo
+    # que EDH todavía no subió y lo congelaría — el mismo pozo en el que cayó
+    # swvl1. Ver docs y config.py.
+    missing_after_days: 150

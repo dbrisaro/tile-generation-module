@@ -79,10 +79,9 @@ class Era5CdsSource(DataSource):
         # el tag lleva la ventana -> con cds_fetch_area todas las escenas apuntan
         # al MISMO archivo, así que la primera lo baja y el resto lo cachea.
         tag = "" if area is None else "_" + "_".join(str(int(x)) for x in area)
-        target = self.workdir / f"era5_{v}_{y}{m:02d}{tag}.nc"
+        target = self.workdir / f"{self.cfg.name}_{v}_{y}{m:02d}{tag}.nc"
         if not target.exists():
             request = {
-                "product_type": "reanalysis",
                 "variable": [vcfg.cds_variable],
                 "daily_statistic": vcfg.daily_statistic,
                 "time_zone": "utc+00:00",
@@ -91,6 +90,11 @@ class Era5CdsSource(DataSource):
                 "month": [f"{m:02d}"],
                 "day": [f"{d.day:02d}" for d in granule.dates],
             }
+            # product_type sale del YAML en vez de estar fijo acá: sólo el derived
+            # de single-levels lo tiene (ahí hay ensemble además de reanalysis).
+            # El de ERA5-Land no publica ese campo, y mandarlo rompe el pedido.
+            if getattr(self.cfg, "cds_product_type", None):
+                request["product_type"] = self.cfg.cds_product_type
             if area is not None:
                 minx, miny, maxx, maxy = area
                 request["area"] = [maxy, minx, miny, maxx]  # N, W, S, E

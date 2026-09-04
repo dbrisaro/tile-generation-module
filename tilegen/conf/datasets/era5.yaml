@@ -6,6 +6,10 @@ temporal: daily
 start: 1940-01-01
 lag_days: 6           # ERA5T is available ~5 days behind real time
 cds_dataset: derived-era5-single-levels-daily-statistics
+# Este derived tiene ensemble además de reanalysis, así que el pedido lleva
+# product_type. El de ERA5-Land no publica ese campo -> por eso sale del YAML
+# y no está fijo en sources/era5.py (ver era5-land.yaml, que lo omite).
+cds_product_type: reanalysis
 # Ventana ÚNICA que se le pide al CDS, en vez de una por escena. Calculada como
 # la caja que cubre las 21 escenas de scenes.yaml (el extremo oeste es nino34 en
 # -170, el este brasil_nordeste en -32). El recorte por escena se hace local.

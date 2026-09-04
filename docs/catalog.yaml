@@ -1,4 +1,4 @@
-# Catálogo de datos en s3://suyana-tiles — generado 2026-08-19
+# Catálogo de datos en s3://suyana-tiles — generado 2026-09-04
 cfs:
   version: operational-analysis
   description: CFS operational analysis (CFSv2), ~0.2° global (NOAA NCEI). Media diaria del análisis 6-horario
@@ -22,21 +22,21 @@ cfs:
       variables:
         tmp2m:
           first: '2011-04-01'
-          last: '2025-04-30'
-          n_days: 5083
+          last: '2026-03-31'
+          n_days: 5114
           gaps: 0
           status: parcial
         u10m:
           first: '2011-04-01'
           last: '2026-03-31'
-          n_days: 4991
-          gaps: 62
+          n_days: 5053
+          gaps: 0
           status: parcial
         v10m:
           first: '2011-04-01'
           last: '2026-03-31'
-          n_days: 5022
-          gaps: 31
+          n_days: 5053
+          gaps: 0
           status: parcial
 chirps:
   version: v2.0
@@ -58,8 +58,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-06-05'
-          n_days: 16592
+          last: '2026-07-21'
+          n_days: 16638
           gaps: 0
           status: completo
     mexico_sur:
@@ -71,8 +71,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-06-05'
-          n_days: 16592
+          last: '2026-07-21'
+          n_days: 16638
           gaps: 0
           status: completo
     centroamerica:
@@ -84,8 +84,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-06-05'
-          n_days: 16592
+          last: '2026-07-21'
+          n_days: 16638
           gaps: 0
           status: completo
     antillas_mayores:
@@ -97,8 +97,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-06-05'
-          n_days: 16592
+          last: '2026-07-21'
+          n_days: 16638
           gaps: 0
           status: completo
     antillas_menores:
@@ -110,8 +110,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-06-05'
-          n_days: 16592
+          last: '2026-07-21'
+          n_days: 16638
           gaps: 0
           status: completo
     colombia:
@@ -123,8 +123,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-06-05'
-          n_days: 16592
+          last: '2026-07-21'
+          n_days: 16638
           gaps: 0
           status: completo
     venezuela:
@@ -136,8 +136,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-06-05'
-          n_days: 16592
+          last: '2026-07-21'
+          n_days: 16638
           gaps: 0
           status: completo
     guayanas:
@@ -149,8 +149,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-06-05'
-          n_days: 16592
+          last: '2026-07-21'
+          n_days: 16638
           gaps: 0
           status: completo
     ecuador_galapagos:
@@ -162,8 +162,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-06-05'
-          n_days: 16592
+          last: '2026-07-21'
+          n_days: 16638
           gaps: 0
           status: completo
     peru:
@@ -175,8 +175,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-07-05'
-          n_days: 16622
+          last: '2026-07-21'
+          n_days: 16638
           gaps: 0
           status: completo
     bolivia:
@@ -188,8 +188,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-06-05'
-          n_days: 16592
+          last: '2026-07-21'
+          n_days: 16638
           gaps: 0
           status: completo
     brasil_amazonia:
@@ -201,8 +201,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-06-05'
-          n_days: 16592
+          last: '2026-07-21'
+          n_days: 16638
           gaps: 0
           status: completo
     brasil_nordeste:
@@ -214,8 +214,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-06-05'
-          n_days: 16592
+          last: '2026-07-21'
+          n_days: 16638
           gaps: 0
           status: completo
     brasil_centro_sudeste:
@@ -227,8 +227,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-06-05'
-          n_days: 16592
+          last: '2026-07-21'
+          n_days: 16638
           gaps: 0
           status: completo
     brasil_sur:
@@ -240,8 +240,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-06-05'
-          n_days: 16592
+          last: '2026-07-21'
+          n_days: 16638
           gaps: 0
           status: completo
     paraguay:
@@ -253,8 +253,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-06-05'
-          n_days: 16592
+          last: '2026-07-21'
+          n_days: 16638
           gaps: 0
           status: completo
     uruguay:
@@ -266,8 +266,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-07-05'
-          n_days: 16622
+          last: '2026-07-21'
+          n_days: 16638
           gaps: 0
           status: completo
     chile_norte_centro:
@@ -279,8 +279,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-06-05'
-          n_days: 16592
+          last: '2026-07-21'
+          n_days: 16638
           gaps: 0
           status: completo
     argentina_norte:
@@ -292,8 +292,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-07-05'
-          n_days: 16622
+          last: '2026-07-21'
+          n_days: 16638
           gaps: 0
           status: completo
     patagonia:
@@ -305,8 +305,8 @@ chirps:
       variables:
         precip:
           first: '1981-01-01'
-          last: '2026-07-05'
-          n_days: 16622
+          last: '2026-07-21'
+          n_days: 16638
           gaps: 0
           status: completo
 chirps-v3:
@@ -332,8 +332,14 @@ chirps-v3:
       variables:
         precip_rnl:
           first: '1981-01-01'
-          last: '1992-12-31'
-          n_days: 4383
+          last: '2003-12-31'
+          n_days: 8400
+          gaps: 0
+          status: parcial
+        precip_sat:
+          first: '2000-01-01'
+          last: '2003-12-31'
+          n_days: 1461
           gaps: 0
           status: parcial
     mexico_sur:
@@ -345,8 +351,14 @@ chirps-v3:
       variables:
         precip_rnl:
           first: '1981-01-01'
-          last: '1992-12-31'
-          n_days: 4383
+          last: '2003-12-31'
+          n_days: 8400
+          gaps: 0
+          status: parcial
+        precip_sat:
+          first: '2000-01-01'
+          last: '2003-12-31'
+          n_days: 1461
           gaps: 0
           status: parcial
     centroamerica:
@@ -358,8 +370,14 @@ chirps-v3:
       variables:
         precip_rnl:
           first: '1981-01-01'
-          last: '1992-12-31'
-          n_days: 4383
+          last: '2003-12-31'
+          n_days: 8399
+          gaps: 1
+          status: parcial
+        precip_sat:
+          first: '2000-01-01'
+          last: '2003-12-31'
+          n_days: 1461
           gaps: 0
           status: parcial
     antillas_mayores:
@@ -371,8 +389,14 @@ chirps-v3:
       variables:
         precip_rnl:
           first: '1981-01-01'
-          last: '1992-12-31'
-          n_days: 4383
+          last: '2003-12-31'
+          n_days: 8400
+          gaps: 0
+          status: parcial
+        precip_sat:
+          first: '2000-01-01'
+          last: '2003-12-31'
+          n_days: 1461
           gaps: 0
           status: parcial
     antillas_menores:
@@ -384,8 +408,14 @@ chirps-v3:
       variables:
         precip_rnl:
           first: '1981-01-01'
-          last: '1992-12-31'
-          n_days: 4383
+          last: '2003-12-31'
+          n_days: 8400
+          gaps: 0
+          status: parcial
+        precip_sat:
+          first: '2000-01-01'
+          last: '2003-12-31'
+          n_days: 1461
           gaps: 0
           status: parcial
     colombia:
@@ -397,8 +427,14 @@ chirps-v3:
       variables:
         precip_rnl:
           first: '1981-01-01'
-          last: '1992-12-31'
-          n_days: 4383
+          last: '2003-12-31'
+          n_days: 8400
+          gaps: 0
+          status: parcial
+        precip_sat:
+          first: '2000-01-01'
+          last: '2003-12-31'
+          n_days: 1461
           gaps: 0
           status: parcial
     venezuela:
@@ -410,8 +446,14 @@ chirps-v3:
       variables:
         precip_rnl:
           first: '1981-01-01'
-          last: '1992-12-31'
-          n_days: 4383
+          last: '2003-12-31'
+          n_days: 8400
+          gaps: 0
+          status: parcial
+        precip_sat:
+          first: '2000-01-01'
+          last: '2003-12-31'
+          n_days: 1461
           gaps: 0
           status: parcial
     guayanas:
@@ -423,8 +465,14 @@ chirps-v3:
       variables:
         precip_rnl:
           first: '1981-01-01'
-          last: '1992-12-31'
-          n_days: 4383
+          last: '2003-12-31'
+          n_days: 8400
+          gaps: 0
+          status: parcial
+        precip_sat:
+          first: '2000-01-01'
+          last: '2003-12-31'
+          n_days: 1461
           gaps: 0
           status: parcial
     ecuador_galapagos:
@@ -436,8 +484,14 @@ chirps-v3:
       variables:
         precip_rnl:
           first: '1981-01-01'
-          last: '1992-12-31'
-          n_days: 4383
+          last: '2003-12-31'
+          n_days: 8399
+          gaps: 1
+          status: parcial
+        precip_sat:
+          first: '2000-01-01'
+          last: '2003-12-31'
+          n_days: 1461
           gaps: 0
           status: parcial
     peru:
@@ -450,14 +504,14 @@ chirps-v3:
         precip_rnl:
           first: '1981-01-01'
           last: '2020-01-02'
-          n_days: 4384
-          gaps: 9862
+          n_days: 8402
+          gaps: 5844
           status: parcial
         precip_sat:
-          first: '2020-01-01'
+          first: '2000-01-01'
           last: '2020-01-02'
-          n_days: 2
-          gaps: 0
+          n_days: 1463
+          gaps: 5844
           status: parcial
     bolivia:
       bbox:
@@ -468,8 +522,14 @@ chirps-v3:
       variables:
         precip_rnl:
           first: '1981-01-01'
-          last: '1992-12-31'
-          n_days: 4383
+          last: '2003-12-31'
+          n_days: 8400
+          gaps: 0
+          status: parcial
+        precip_sat:
+          first: '2000-01-01'
+          last: '2003-12-31'
+          n_days: 1461
           gaps: 0
           status: parcial
     brasil_amazonia:
@@ -481,8 +541,14 @@ chirps-v3:
       variables:
         precip_rnl:
           first: '1981-01-01'
-          last: '1992-12-31'
-          n_days: 4383
+          last: '2003-12-31'
+          n_days: 8400
+          gaps: 0
+          status: parcial
+        precip_sat:
+          first: '2000-01-01'
+          last: '2003-12-31'
+          n_days: 1461
           gaps: 0
           status: parcial
     brasil_nordeste:
@@ -494,9 +560,15 @@ chirps-v3:
       variables:
         precip_rnl:
           first: '1981-01-01'
-          last: '1992-11-26'
-          n_days: 4348
+          last: '2003-12-31'
+          n_days: 8400
           gaps: 0
+          status: parcial
+        precip_sat:
+          first: '2000-01-01'
+          last: '2003-12-31'
+          n_days: 1460
+          gaps: 1
           status: parcial
     brasil_centro_sudeste:
       bbox:
@@ -507,8 +579,14 @@ chirps-v3:
       variables:
         precip_rnl:
           first: '1981-01-01'
-          last: '1991-12-31'
-          n_days: 4017
+          last: '2003-12-31'
+          n_days: 8400
+          gaps: 0
+          status: parcial
+        precip_sat:
+          first: '2000-01-01'
+          last: '2003-12-31'
+          n_days: 1461
           gaps: 0
           status: parcial
     brasil_sur:
@@ -520,8 +598,14 @@ chirps-v3:
       variables:
         precip_rnl:
           first: '1981-01-01'
-          last: '1991-12-31'
-          n_days: 4017
+          last: '2003-12-31'
+          n_days: 8400
+          gaps: 0
+          status: parcial
+        precip_sat:
+          first: '2000-01-01'
+          last: '2003-09-22'
+          n_days: 1361
           gaps: 0
           status: parcial
     paraguay:
@@ -533,8 +617,14 @@ chirps-v3:
       variables:
         precip_rnl:
           first: '1981-01-01'
-          last: '1991-12-31'
-          n_days: 4017
+          last: '2002-12-31'
+          n_days: 8035
+          gaps: 0
+          status: parcial
+        precip_sat:
+          first: '2000-01-01'
+          last: '2002-12-31'
+          n_days: 1096
           gaps: 0
           status: parcial
     uruguay:
@@ -546,8 +636,14 @@ chirps-v3:
       variables:
         precip_rnl:
           first: '1981-01-01'
-          last: '1991-12-31'
-          n_days: 4017
+          last: '2002-12-31'
+          n_days: 8035
+          gaps: 0
+          status: parcial
+        precip_sat:
+          first: '2000-01-01'
+          last: '2002-12-31'
+          n_days: 1096
           gaps: 0
           status: parcial
     chile_norte_centro:
@@ -559,8 +655,14 @@ chirps-v3:
       variables:
         precip_rnl:
           first: '1981-01-01'
-          last: '1991-12-31'
-          n_days: 4017
+          last: '2002-12-31'
+          n_days: 8035
+          gaps: 0
+          status: parcial
+        precip_sat:
+          first: '2000-01-01'
+          last: '2002-12-31'
+          n_days: 1096
           gaps: 0
           status: parcial
     argentina_norte:
@@ -572,8 +674,14 @@ chirps-v3:
       variables:
         precip_rnl:
           first: '1981-01-01'
-          last: '1991-12-31'
-          n_days: 4017
+          last: '2002-12-31'
+          n_days: 8035
+          gaps: 0
+          status: parcial
+        precip_sat:
+          first: '2000-01-01'
+          last: '2002-12-31'
+          n_days: 1096
           gaps: 0
           status: parcial
     patagonia:
@@ -585,9 +693,15 @@ chirps-v3:
       variables:
         precip_rnl:
           first: '1981-01-01'
-          last: '1991-12-31'
-          n_days: 4011
-          gaps: 6
+          last: '2002-12-31'
+          n_days: 8035
+          gaps: 0
+          status: parcial
+        precip_sat:
+          first: '2000-01-01'
+          last: '2002-12-31'
+          n_days: 1096
+          gaps: 0
           status: parcial
 chirts:
   version: v1.0
@@ -610,14 +724,14 @@ chirts:
       variables:
         tmax:
           first: '1983-01-01'
-          last: '1989-12-31'
-          n_days: 2557
+          last: '2016-12-31'
+          n_days: 12403
           gaps: 0
           status: parcial
         tmin:
           first: '1983-01-01'
-          last: '1989-12-31'
-          n_days: 2557
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
     mexico_sur:
@@ -629,14 +743,14 @@ chirts:
       variables:
         tmax:
           first: '1983-01-01'
-          last: '1989-12-31'
-          n_days: 2557
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
         tmin:
           first: '1983-01-01'
-          last: '1989-12-31'
-          n_days: 2557
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
     centroamerica:
@@ -648,14 +762,14 @@ chirts:
       variables:
         tmax:
           first: '1983-01-01'
-          last: '1989-12-31'
-          n_days: 2557
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
         tmin:
           first: '1983-01-01'
-          last: '1989-12-31'
-          n_days: 2557
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
     antillas_mayores:
@@ -667,14 +781,14 @@ chirts:
       variables:
         tmax:
           first: '1983-01-01'
-          last: '1989-01-15'
-          n_days: 2207
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
         tmin:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
     antillas_menores:
@@ -686,14 +800,14 @@ chirts:
       variables:
         tmax:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
         tmin:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
     colombia:
@@ -705,14 +819,14 @@ chirts:
       variables:
         tmax:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
         tmin:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
     venezuela:
@@ -724,14 +838,14 @@ chirts:
       variables:
         tmax:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
         tmin:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
     guayanas:
@@ -743,14 +857,14 @@ chirts:
       variables:
         tmax:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
         tmin:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
     ecuador_galapagos:
@@ -762,14 +876,14 @@ chirts:
       variables:
         tmax:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
         tmin:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
     peru:
@@ -781,14 +895,14 @@ chirts:
       variables:
         tmax:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
         tmin:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
     bolivia:
@@ -800,14 +914,14 @@ chirts:
       variables:
         tmax:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
         tmin:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
     brasil_amazonia:
@@ -819,14 +933,14 @@ chirts:
       variables:
         tmax:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
         tmin:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
     brasil_nordeste:
@@ -838,14 +952,14 @@ chirts:
       variables:
         tmax:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
         tmin:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
     brasil_centro_sudeste:
@@ -857,14 +971,14 @@ chirts:
       variables:
         tmax:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
         tmin:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
     brasil_sur:
@@ -876,14 +990,14 @@ chirts:
       variables:
         tmax:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
         tmin:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
     paraguay:
@@ -895,14 +1009,14 @@ chirts:
       variables:
         tmax:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
         tmin:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
     uruguay:
@@ -914,14 +1028,14 @@ chirts:
       variables:
         tmax:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
         tmin:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
     chile_norte_centro:
@@ -933,14 +1047,14 @@ chirts:
       variables:
         tmax:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
         tmin:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
     argentina_norte:
@@ -952,14 +1066,14 @@ chirts:
       variables:
         tmax:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
         tmin:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
     patagonia:
@@ -971,16 +1085,409 @@ chirts:
       variables:
         tmax:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
         tmin:
           first: '1983-01-01'
-          last: '1988-12-31'
-          n_days: 2192
+          last: '2016-12-31'
+          n_days: 12419
           gaps: 0
           status: parcial
+cpc:
+  version: v1.0
+  description: CPC Global Daily Temperature V1.0 — Tmax/Tmin globales diarios, 0.5°, 1979–presente (NOAA
+    PSL)
+  source: cpc_psl
+  temporal: daily
+  configured_range: 1979-01-01 -> hoy
+  resolution_deg: 0.5
+  variables:
+    tmax: degC
+    tmin: degC
+  s3_path_template: s3://suyana-tiles/cpc/v1.0/<scene>.zarr
+  scenes:
+    mexico_norte:
+      bbox:
+      - -122.0
+      - 20.0
+      - -96.0
+      - 35.0
+      variables:
+        tmax:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+        tmin:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+    mexico_sur:
+      bbox:
+      - -107.0
+      - 13.0
+      - -84.0
+      - 23.0
+      variables:
+        tmax:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+        tmin:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+    centroamerica:
+      bbox:
+      - -95.0
+      - 4.0
+      - -76.0
+      - 19.0
+      variables:
+        tmax:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+        tmin:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+    antillas_mayores:
+      bbox:
+      - -86.0
+      - 15.0
+      - -63.0
+      - 28.0
+      variables:
+        tmax:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+        tmin:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+    antillas_menores:
+      bbox:
+      - -66.0
+      - 8.0
+      - -56.0
+      - 20.0
+      variables:
+        tmax:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+        tmin:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+    colombia:
+      bbox:
+      - -84.0
+      - -5.0
+      - -66.0
+      - 15.0
+      variables:
+        tmax:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+        tmin:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+    venezuela:
+      bbox:
+      - -74.0
+      - 0.0
+      - -58.0
+      - 14.0
+      variables:
+        tmax:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+        tmin:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+    guayanas:
+      bbox:
+      - -62.0
+      - 1.0
+      - -48.0
+      - 10.0
+      variables:
+        tmax:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+        tmin:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+    ecuador_galapagos:
+      bbox:
+      - -95.0
+      - -6.0
+      - -74.0
+      - 3.0
+      variables:
+        tmax:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+        tmin:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+    peru:
+      bbox:
+      - -90.0
+      - -20.0
+      - -68.0
+      - 1.0
+      variables:
+        tmax:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+        tmin:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+    bolivia:
+      bbox:
+      - -71.0
+      - -24.0
+      - -56.0
+      - -9.0
+      variables:
+        tmax:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+        tmin:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+    brasil_amazonia:
+      bbox:
+      - -74.0
+      - -14.0
+      - -49.0
+      - 6.0
+      variables:
+        tmax:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+        tmin:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+    brasil_nordeste:
+      bbox:
+      - -49.0
+      - -18.0
+      - -32.0
+      - 0.0
+      variables:
+        tmax:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+        tmin:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+    brasil_centro_sudeste:
+      bbox:
+      - -62.0
+      - -26.0
+      - -38.0
+      - -14.0
+      variables:
+        tmax:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+        tmin:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+    brasil_sur:
+      bbox:
+      - -58.0
+      - -34.0
+      - -46.0
+      - -22.0
+      variables:
+        tmax:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+        tmin:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+    paraguay:
+      bbox:
+      - -64.0
+      - -28.0
+      - -53.0
+      - -18.0
+      variables:
+        tmax:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+        tmin:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+    uruguay:
+      bbox:
+      - -60.0
+      - -38.0
+      - -50.0
+      - -29.0
+      variables:
+        tmax:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+        tmin:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+    chile_norte_centro:
+      bbox:
+      - -77.0
+      - -40.0
+      - -66.0
+      - -17.0
+      variables:
+        tmax:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+        tmin:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+    argentina_norte:
+      bbox:
+      - -70.0
+      - -43.0
+      - -52.0
+      - -21.0
+      variables:
+        tmax:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+        tmin:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+    patagonia:
+      bbox:
+      - -77.0
+      - -57.0
+      - -56.0
+      - -40.0
+      variables:
+        tmax:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
+        tmin:
+          first: '1979-01-01'
+          last: '2026-08-30'
+          n_days: 17409
+          gaps: 0
+          status: completo
 era5:
   version: daily-stats
   description: ERA5 single-levels daily statistics, 0.25° global (Copernicus CDS, ~/.cdsapirc required)
@@ -991,9 +1498,13 @@ era5:
   variables:
     t2m_mean: K
     t2m_max: K
+    t2m_min: K
     precip_sum: m
     ssrd_sum: J m-2
+    fg10_max: m s-1
     swvl1: m3 m-3
+    sd_mean: m of water equivalent
+    rsn_mean: kg m-3
   s3_path_template: s3://suyana-tiles/era5/daily-stats/<scene>.zarr
   scenes:
     mexico_norte:
@@ -1005,26 +1516,56 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        t2m_min:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16632
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
+        ssrd_sum:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        fg10_max:
+          first: '1981-01-01'
+          last: '2026-08-26'
+          n_days: 11377
+          gaps: 5297
+          status: parcial
         swvl1:
           first: '1981-01-01'
-          last: '2026-06-30'
-          n_days: 16617
+          last: '2026-07-31'
+          n_days: 16648
+          gaps: 0
+          status: completo
+        sd_mean:
+          first: '1981-01-01'
+          last: '2026-07-31'
+          n_days: 16648
+          gaps: 0
+          status: completo
+        rsn_mean:
+          first: '1981-01-01'
+          last: '2026-07-31'
+          n_days: 16648
           gaps: 0
           status: completo
     mexico_sur:
@@ -1036,26 +1577,56 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        t2m_min:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16632
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        ssrd_sum:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        fg10_max:
+          first: '1995-01-01'
+          last: '2026-08-26'
+          n_days: 11561
           gaps: 0
           status: completo
         swvl1:
           first: '1981-01-01'
-          last: '2026-06-30'
-          n_days: 16617
+          last: '2026-07-31'
+          n_days: 16648
+          gaps: 0
+          status: completo
+        sd_mean:
+          first: '1981-01-01'
+          last: '2026-07-31'
+          n_days: 16648
+          gaps: 0
+          status: completo
+        rsn_mean:
+          first: '1981-01-01'
+          last: '2026-07-31'
+          n_days: 16648
           gaps: 0
           status: completo
     centroamerica:
@@ -1067,26 +1638,56 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        t2m_min:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16632
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        ssrd_sum:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        fg10_max:
+          first: '1995-01-01'
+          last: '2026-08-26'
+          n_days: 11561
           gaps: 0
           status: completo
         swvl1:
           first: '1981-01-01'
-          last: '2026-06-30'
-          n_days: 16617
+          last: '2026-07-31'
+          n_days: 16648
+          gaps: 0
+          status: completo
+        sd_mean:
+          first: '1981-01-01'
+          last: '2026-07-31'
+          n_days: 16648
+          gaps: 0
+          status: completo
+        rsn_mean:
+          first: '1981-01-01'
+          last: '2026-07-31'
+          n_days: 16648
           gaps: 0
           status: completo
     antillas_mayores:
@@ -1098,26 +1699,56 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        t2m_min:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16632
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        ssrd_sum:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        fg10_max:
+          first: '1995-01-01'
+          last: '2026-08-26'
+          n_days: 11561
           gaps: 0
           status: completo
         swvl1:
           first: '1981-01-01'
-          last: '2026-06-30'
-          n_days: 16617
+          last: '2026-07-31'
+          n_days: 16648
+          gaps: 0
+          status: completo
+        sd_mean:
+          first: '1981-01-01'
+          last: '2026-07-31'
+          n_days: 16648
+          gaps: 0
+          status: completo
+        rsn_mean:
+          first: '1981-01-01'
+          last: '2026-07-31'
+          n_days: 16648
           gaps: 0
           status: completo
     antillas_menores:
@@ -1129,26 +1760,56 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        t2m_min:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16632
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        ssrd_sum:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        fg10_max:
+          first: '1995-01-01'
+          last: '2026-08-26'
+          n_days: 11561
           gaps: 0
           status: completo
         swvl1:
           first: '1981-01-01'
-          last: '2026-06-30'
-          n_days: 16617
+          last: '2026-07-31'
+          n_days: 16648
+          gaps: 0
+          status: completo
+        sd_mean:
+          first: '1981-01-01'
+          last: '2026-07-31'
+          n_days: 16648
+          gaps: 0
+          status: completo
+        rsn_mean:
+          first: '1981-01-01'
+          last: '2026-07-31'
+          n_days: 16648
           gaps: 0
           status: completo
     colombia:
@@ -1160,26 +1821,56 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        t2m_min:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16632
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        ssrd_sum:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        fg10_max:
+          first: '1995-01-01'
+          last: '2026-08-26'
+          n_days: 11561
           gaps: 0
           status: completo
         swvl1:
           first: '1981-01-01'
-          last: '2026-06-30'
-          n_days: 16617
+          last: '2026-07-31'
+          n_days: 16648
+          gaps: 0
+          status: completo
+        sd_mean:
+          first: '1981-01-01'
+          last: '2026-07-31'
+          n_days: 16648
+          gaps: 0
+          status: completo
+        rsn_mean:
+          first: '1981-01-01'
+          last: '2026-07-31'
+          n_days: 16648
           gaps: 0
           status: completo
     venezuela:
@@ -1191,28 +1882,52 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        t2m_min:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16632
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        ssrd_sum:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        fg10_max:
+          first: '1995-01-01'
+          last: '2026-08-26'
+          n_days: 11561
           gaps: 0
           status: completo
         swvl1:
           first: '1981-01-01'
-          last: '2026-06-30'
-          n_days: 16617
+          last: '2026-07-31'
+          n_days: 16648
           gaps: 0
           status: completo
+        sd_mean:
+          first: '1981-01-01'
+          last: '1995-12-31'
+          n_days: 5113
+          gaps: 365
+          status: parcial
     guayanas:
       bbox:
       - -62.0
@@ -1222,26 +1937,44 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        t2m_min:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16632
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
+        ssrd_sum:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        fg10_max:
+          first: '1981-01-01'
+          last: '2026-08-26'
+          n_days: 11681
+          gaps: 4993
+          status: parcial
         swvl1:
           first: '1981-01-01'
-          last: '2026-06-30'
-          n_days: 16617
+          last: '2026-07-31'
+          n_days: 16648
           gaps: 0
           status: completo
     ecuador_galapagos:
@@ -1253,26 +1986,44 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        t2m_min:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16632
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        ssrd_sum:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        fg10_max:
+          first: '1995-01-01'
+          last: '2026-08-26'
+          n_days: 11561
           gaps: 0
           status: completo
         swvl1:
           first: '1981-01-01'
-          last: '2026-06-30'
-          n_days: 16617
+          last: '2026-07-31'
+          n_days: 16648
           gaps: 0
           status: completo
     peru:
@@ -1284,32 +2035,44 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-08-13'
-          n_days: 16661
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-08-13'
-          n_days: 16661
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        t2m_min:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-08-13'
-          n_days: 16660
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         ssrd_sum:
-          first: '2024-01-01'
-          last: '2024-02-29'
-          n_days: 60
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
-          status: parcial
+          status: completo
+        fg10_max:
+          first: '1995-01-01'
+          last: '2026-08-26'
+          n_days: 11561
+          gaps: 0
+          status: completo
         swvl1:
           first: '1981-01-01'
-          last: '2026-06-30'
-          n_days: 16617
+          last: '2026-07-31'
+          n_days: 16648
           gaps: 0
           status: completo
     bolivia:
@@ -1321,26 +2084,44 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        t2m_min:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16632
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        ssrd_sum:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        fg10_max:
+          first: '1995-01-01'
+          last: '2026-08-26'
+          n_days: 11561
           gaps: 0
           status: completo
         swvl1:
           first: '1981-01-01'
-          last: '2026-06-30'
-          n_days: 16617
+          last: '2026-07-31'
+          n_days: 16648
           gaps: 0
           status: completo
     brasil_amazonia:
@@ -1352,26 +2133,44 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        t2m_min:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16632
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        ssrd_sum:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        fg10_max:
+          first: '1995-01-01'
+          last: '2026-08-26'
+          n_days: 11561
           gaps: 0
           status: completo
         swvl1:
           first: '1981-01-01'
-          last: '2026-06-30'
-          n_days: 16617
+          last: '2026-07-31'
+          n_days: 16648
           gaps: 0
           status: completo
     brasil_nordeste:
@@ -1383,26 +2182,44 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        t2m_min:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16632
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        ssrd_sum:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        fg10_max:
+          first: '1995-01-01'
+          last: '2026-08-26'
+          n_days: 11561
           gaps: 0
           status: completo
         swvl1:
           first: '1981-01-01'
-          last: '2026-06-30'
-          n_days: 16617
+          last: '2026-07-31'
+          n_days: 16648
           gaps: 0
           status: completo
     brasil_centro_sudeste:
@@ -1414,26 +2231,44 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        t2m_min:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16632
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        ssrd_sum:
+          first: '1981-01-01'
+          last: '2026-08-29'
+          n_days: 16677
+          gaps: 0
+          status: completo
+        fg10_max:
+          first: '1995-01-01'
+          last: '2026-08-26'
+          n_days: 11561
           gaps: 0
           status: completo
         swvl1:
           first: '1981-01-01'
-          last: '2026-06-30'
-          n_days: 16617
+          last: '2026-07-31'
+          n_days: 16648
           gaps: 0
           status: completo
     brasil_sur:
@@ -1445,26 +2280,44 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-28'
+          n_days: 16676
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-28'
+          n_days: 16676
+          gaps: 0
+          status: completo
+        t2m_min:
+          first: '1981-01-01'
+          last: '2026-08-28'
+          n_days: 16676
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16632
+          last: '2026-08-28'
+          n_days: 16676
           gaps: 0
           status: completo
+        ssrd_sum:
+          first: '1981-01-01'
+          last: '2026-08-28'
+          n_days: 16676
+          gaps: 0
+          status: completo
+        fg10_max:
+          first: '1981-01-01'
+          last: '2026-08-26'
+          n_days: 11681
+          gaps: 4993
+          status: parcial
         swvl1:
           first: '1981-01-01'
-          last: '2026-06-30'
-          n_days: 16617
+          last: '2026-07-31'
+          n_days: 16648
           gaps: 0
           status: completo
     paraguay:
@@ -1476,26 +2329,44 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-28'
+          n_days: 16676
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-28'
+          n_days: 16676
+          gaps: 0
+          status: completo
+        t2m_min:
+          first: '1981-01-01'
+          last: '2026-08-28'
+          n_days: 16676
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16632
+          last: '2026-08-28'
+          n_days: 16676
+          gaps: 0
+          status: completo
+        ssrd_sum:
+          first: '1981-01-01'
+          last: '2026-08-28'
+          n_days: 16676
+          gaps: 0
+          status: completo
+        fg10_max:
+          first: '1995-01-01'
+          last: '2026-08-26'
+          n_days: 11561
           gaps: 0
           status: completo
         swvl1:
           first: '1981-01-01'
-          last: '2026-06-30'
-          n_days: 16617
+          last: '2026-07-31'
+          n_days: 16648
           gaps: 0
           status: completo
     uruguay:
@@ -1507,26 +2378,44 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-28'
+          n_days: 16676
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-28'
+          n_days: 16676
+          gaps: 0
+          status: completo
+        t2m_min:
+          first: '1981-01-01'
+          last: '2026-08-28'
+          n_days: 16676
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16632
+          last: '2026-08-28'
+          n_days: 16676
+          gaps: 0
+          status: completo
+        ssrd_sum:
+          first: '1981-01-01'
+          last: '2026-08-28'
+          n_days: 16676
+          gaps: 0
+          status: completo
+        fg10_max:
+          first: '1995-01-01'
+          last: '2026-08-26'
+          n_days: 11561
           gaps: 0
           status: completo
         swvl1:
           first: '1981-01-01'
-          last: '2026-06-30'
-          n_days: 16617
+          last: '2026-07-31'
+          n_days: 16648
           gaps: 0
           status: completo
     chile_norte_centro:
@@ -1538,26 +2427,44 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-28'
+          n_days: 16676
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16633
+          last: '2026-08-28'
+          n_days: 16676
+          gaps: 0
+          status: completo
+        t2m_min:
+          first: '1981-01-01'
+          last: '2026-08-28'
+          n_days: 16676
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-07-16'
-          n_days: 16632
+          last: '2026-08-28'
+          n_days: 16676
+          gaps: 0
+          status: completo
+        ssrd_sum:
+          first: '1981-01-01'
+          last: '2026-08-28'
+          n_days: 16676
+          gaps: 0
+          status: completo
+        fg10_max:
+          first: '1995-01-01'
+          last: '2026-08-26'
+          n_days: 11561
           gaps: 0
           status: completo
         swvl1:
           first: '1981-01-01'
-          last: '2026-06-30'
-          n_days: 16617
+          last: '2026-07-31'
+          n_days: 16648
           gaps: 0
           status: completo
     argentina_norte:
@@ -1569,26 +2476,44 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-08-13'
-          n_days: 16661
+          last: '2026-08-28'
+          n_days: 16676
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-08-13'
-          n_days: 16661
+          last: '2026-08-28'
+          n_days: 16676
+          gaps: 0
+          status: completo
+        t2m_min:
+          first: '1981-01-01'
+          last: '2026-08-28'
+          n_days: 16676
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-08-13'
-          n_days: 16660
+          last: '2026-08-28'
+          n_days: 16676
+          gaps: 0
+          status: completo
+        ssrd_sum:
+          first: '1981-01-01'
+          last: '2026-08-28'
+          n_days: 16676
+          gaps: 0
+          status: completo
+        fg10_max:
+          first: '1995-01-01'
+          last: '2026-08-26'
+          n_days: 11561
           gaps: 0
           status: completo
         swvl1:
           first: '1981-01-01'
-          last: '2026-06-30'
-          n_days: 16617
+          last: '2026-07-31'
+          n_days: 16648
           gaps: 0
           status: completo
     patagonia:
@@ -1600,26 +2525,44 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-08-13'
-          n_days: 16661
+          last: '2026-08-28'
+          n_days: 16676
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-08-13'
-          n_days: 16661
+          last: '2026-08-28'
+          n_days: 16676
+          gaps: 0
+          status: completo
+        t2m_min:
+          first: '1981-01-01'
+          last: '2026-08-28'
+          n_days: 16676
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-08-13'
-          n_days: 16660
+          last: '2026-08-28'
+          n_days: 16676
+          gaps: 0
+          status: completo
+        ssrd_sum:
+          first: '1981-01-01'
+          last: '2026-08-28'
+          n_days: 16676
+          gaps: 0
+          status: completo
+        fg10_max:
+          first: '1995-01-01'
+          last: '2026-08-26'
+          n_days: 11561
           gaps: 0
           status: completo
         swvl1:
           first: '1981-01-01'
-          last: '2026-06-30'
-          n_days: 16617
+          last: '2026-07-31'
+          n_days: 16648
           gaps: 0
           status: completo
     nino34:
@@ -1631,25 +2574,43 @@ era5:
       variables:
         t2m_mean:
           first: '1981-01-01'
-          last: '2026-08-13'
-          n_days: 16661
+          last: '2026-08-28'
+          n_days: 16676
           gaps: 0
           status: completo
         t2m_max:
           first: '1981-01-01'
-          last: '2026-08-13'
-          n_days: 16661
+          last: '2026-08-28'
+          n_days: 16676
+          gaps: 0
+          status: completo
+        t2m_min:
+          first: '1981-01-01'
+          last: '2026-08-28'
+          n_days: 16676
           gaps: 0
           status: completo
         precip_sum:
           first: '1981-01-01'
-          last: '2026-08-13'
-          n_days: 16660
+          last: '2026-08-28'
+          n_days: 16676
+          gaps: 0
+          status: completo
+        ssrd_sum:
+          first: '1981-01-01'
+          last: '2026-08-28'
+          n_days: 16676
+          gaps: 0
+          status: completo
+        fg10_max:
+          first: '1995-01-01'
+          last: '2026-08-26'
+          n_days: 11561
           gaps: 0
           status: completo
         swvl1:
           first: '1981-01-01'
-          last: '2026-06-30'
-          n_days: 16617
+          last: '2026-07-31'
+          n_days: 16648
           gaps: 0
           status: completo

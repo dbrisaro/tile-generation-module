@@ -84,3 +84,34 @@ variables:
     edh_hourly_variable: swvl1
     edh_hourly_statistic: mean
     units: m3 m-3
+  sd_mean:
+    # NIEVE: "snow depth" de ERA5 (`sd`) NO es la altura de la nieve, es el
+    # EQUIVALENTE EN AGUA del manto: cuánta agua queda si se derrite todo, en
+    # metros. Por eso viaja junto a rsn_mean (densidad); la altura física sale
+    # de las dos:
+    #     altura_nieve (m) = sd_mean * 1000 / rsn_mean
+    # Guardamos las dos crudas en vez de la altura ya calculada porque el
+    # equivalente en agua es lo que importa para deshielo y caudal, y la altura
+    # se deriva sin volver a bajar nada.
+    #
+    # Es una variable de ESTADO (el manto que hay en ese instante), no una
+    # acumulación, así que el diario es el promedio de las 24 horas -> igual que
+    # t2m_mean, y a diferencia de precip_sum.
+    cds_variable: snow_depth
+    daily_statistic: daily_mean
+    # el store diario de EDH ya la trae promediada -> backfill barato (1 valor
+    # por día en vez de leer 24 horas), como t2m_mean.
+    edh_variable: sd
+    units: m of water equivalent
+  rsn_mean:
+    # densidad del manto de nieve, kg/m3. Sola no se usa: está para convertir
+    # sd_mean a altura real de nieve (ver el comentario de sd_mean).
+    #
+    # A diferencia de sd, el store DIARIO de EDH no la publica (verificado
+    # contra el store el 2026-09-04: sólo sd), así que el histórico sale del
+    # store horario promediando las 24 horas localmente.
+    cds_variable: snow_density
+    daily_statistic: daily_mean
+    edh_hourly_variable: rsn
+    edh_hourly_statistic: mean
+    units: kg m-3

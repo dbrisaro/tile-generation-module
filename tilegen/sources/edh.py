@@ -77,6 +77,27 @@ class Era5EdhSource(DataSource):
             if minx < 0 <= maxx:
                 raise ValueError("bbox crossing lon 0 not supported for EDH")
             minx, maxx = minx % 360, maxx % 360
+        # Un paso de grilla de colchón en cada borde antes de cortar.
+        #
+        # `.sel(slice(...))` compara contra el CENTRO de la celda, y en una
+        # grilla de 0.1° los centros no son exactos en binario (0.1 no lo es):
+        # el centro en -77.0 puede estar guardado como -76.99999 y caerse del
+        # corte. A 0.25° no pasa, porque esos centros sí son exactos — por eso
+        # era5 nunca lo sufrió y era5-land sí: la misma escena salía con 2
+        # columnas y 1 fila MENOS por EDH que por CDS, y el writer rechazaba el
+        # segundo write con "asset grid does not match store grid". O sea que la
+        # variable quedaba atada a la fuente que hubiera creado el cubo.
+        #
+        # El recorte fino no se pierde: lo hace clip_box() en assets.py, que va
+        # por los BORDES de la celda y es la autoridad. Acá sólo hay que no
+        # quedarse corto. El colchón se recorta contra el rango real del store
+        # para no pedir fuera de la grilla (0..360 da la vuelta en 0).
+        paso_lat = abs(float(da[lat][1] - da[lat][0]))
+        paso_lon = abs(float(da[lon][1] - da[lon][0]))
+        lo0, lo1 = float(da[lon].min()), float(da[lon].max())
+        la0, la1 = float(da[lat].min()), float(da[lat].max())
+        minx, maxx = max(lo0, minx - paso_lon), min(lo1, maxx + paso_lon)
+        miny, maxy = max(la0, miny - paso_lat), min(la1, maxy + paso_lat)
         lat_desc = float(da[lat][0]) > float(da[lat][-1])
         return da.sel({lon: slice(minx, maxx),
                        lat: slice(maxy, miny) if lat_desc else slice(miny, maxy)})

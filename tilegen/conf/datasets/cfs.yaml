@@ -5,7 +5,20 @@ source: cfs_ncei
 temporal: daily
 start: 2011-04-01     # CFSv2 operational analysis time-series comienza aquí (CFSR 1979–2011 es otro producto)
 lag_days: 30          # se publica por mes completo con retraso; meses parciales dan 404 -> se saltean solos
-base_url: https://www.ncei.noaa.gov/data/climate-forecast-system/access/operational-analysis/time-series
+# NCEI viene ~16 meses atrasado (al 3-sep-2026 el último mes publicado es
+# 2026-03, y antes de eso 2025-04). Ningún horizonte razonable cubre eso, así
+# que acá NUNCA se da una ausencia por definitiva: se re-pregunta en cada
+# corrida. El costo es bajo porque el granule es un MES: son ~18 pedidos que
+# dan 404, no ~540. Así el día que NCEI se ponga al día, engancha solo.
+missing_after_days: -1
+# NCEI mudó el producto en agosto 2026: el árbol viejo
+# (.../data/climate-forecast-system/access/operational-analysis/time-series) da 404
+# hasta en el directorio raíz, y deja un readme.txt apuntando acá. Es el mismo
+# archivo con el mismo layout {Y}/{YYYYMM}/{campo}.gdas.{YYYYMM}.grib2, servido
+# desde el object store (bucket datapub-prod-cfs-operational-analysis). OJO: NO
+# confundir con el bucket público noaa-cfs-pds, que es otro producto (carpetas
+# diarias cdas.YYYYMMDD/, sólo desde 2023-04) y no sirve para este source.
+base_url: https://www.ncei.noaa.gov/oa/prod-cfs-operational-analysis/time-series
 variables:
   tmp2m:
     source_file: tmp2m    # {base_url}/{Y}/{YYYYMM}/tmp2m.gdas.{YYYYMM}.grib2

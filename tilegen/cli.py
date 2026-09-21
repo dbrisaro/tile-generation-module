@@ -55,6 +55,10 @@ def _common(f):
     f = click.option("--workers", type=int, default=None,
                      help="Parallel granules (default from config.yaml).")(f)
     f = click.option("--overwrite", is_flag=True, help="Regenerate data that already exists.")(f)
+    f = click.option("--retry-missing", is_flag=True,
+                     help="Volver a pedir los días anotados como ausentes en la fuente "
+                          "(no re-descarga lo que ya está escrito, a diferencia de "
+                          "--overwrite). Para cuando la fuente se puso al día.")(f)
     f = click.option("--local-only", is_flag=True,
                      help="Write under the workdir instead of S3 (for testing).")(f)
     f = click.option("--format", "fmt", type=click.Choice(["zarr", "cog"]), default=None,
@@ -85,7 +89,7 @@ def _resolve_scenes(config_dir, scene_names):
 
 
 def _build(config_dir, dataset, bbox, scene_names, fmt, local_only, overwrite,
-           workers, keep_local=None, source=None):
+           workers, keep_local=None, source=None, retry_missing=False):
     """Return a list of pipelines: one per scene (zarr) or a single one (cog)."""
     gcfg = load_global(config_dir)
     dcfg = load_dataset(config_dir, dataset)
@@ -99,7 +103,8 @@ def _build(config_dir, dataset, bbox, scene_names, fmt, local_only, overwrite,
     if fmt == "zarr":
         return [ZarrPipeline(gcfg, dcfg, name, scfg.bbox,
                              local_only=local_only, overwrite=overwrite,
-                             workers=workers, keep_local=keep_local)
+                             workers=workers, keep_local=keep_local,
+                             retry_missing=retry_missing)
                 for name, scfg in _resolve_scenes(config_dir, scene_names)]
     return [Pipeline(gcfg, dcfg, bbox=bbox or None, local_only=local_only,
                      overwrite=overwrite, workers=workers, keep_local=keep_local)]
@@ -119,10 +124,11 @@ def scenes(config_dir):
 @_common
 @click.pass_obj
 def plan(config_dir, dataset, variables, start, end, bbox, scene_names, fmt,
-         local_only, overwrite, workers, source):
+         local_only, overwrite, retry_missing, workers, source):
     """Show what a run would do, without downloading anything."""
     for p in _build(config_dir, dataset, bbox, scene_names, fmt,
-                    local_only, overwrite, workers, source=source):
+                    local_only, overwrite, workers, source=source,
+                    retry_missing=retry_missing):
         pl = p.plan(variables or None, start.date() if start else None,
                     end.date() if end else None)
         tag = f"[{p.scene}] " if hasattr(p, "scene") else ""
@@ -138,12 +144,12 @@ def plan(config_dir, dataset, variables, start, end, bbox, scene_names, fmt,
 @click.option("--keep-local", is_flag=True, help="Keep downloaded source files in the workdir.")
 @click.pass_obj
 def run(config_dir, dataset, variables, start, end, bbox, scene_names, fmt,
-        local_only, overwrite, workers, keep_local, source):
+        local_only, overwrite, retry_missing, workers, keep_local, source):
     """Fetch, process and upload everything missing in the requested range."""
     failed = 0
     for p in _build(config_dir, dataset, bbox, scene_names, fmt, local_only,
                     overwrite, workers, keep_local=True if keep_local else None,
-                    source=source):
+                    source=source, retry_missing=retry_missing):
         pl = p.plan(variables or None, start.date() if start else None,
                     end.date() if end else None)
         tag = f"[{p.scene}] " if hasattr(p, "scene") else ""

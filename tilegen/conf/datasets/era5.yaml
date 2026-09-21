@@ -88,6 +88,12 @@ variables:
     edh_hourly_variable: swvl1
     edh_hourly_statistic: mean
     units: m3 m-3
+    # El lag_days: 6 del dataset describe al CDS, no a esta variable: EDH publica
+    # una vez por mes y va ~2 meses atrás. Con el horizonte por defecto (6+30=36)
+    # el cron semanal daba por inexistente todo lo que EDH todavía no había
+    # subido, y lo congelaba: así swvl1 quedó clavada en 2026-06-30 aunque el
+    # cron corría sin errores. 150 días deja margen de sobra sobre esa cadencia.
+    missing_after_days: 150
   sd_mean:
     # NIEVE: "snow depth" de ERA5 (`sd`) NO es la altura de la nieve, es el
     # EQUIVALENTE EN AGUA del manto: cuánta agua queda si se derrite todo, en

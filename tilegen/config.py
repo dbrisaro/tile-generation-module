@@ -70,6 +70,10 @@ class SceneCfg(BaseModel):
 class VariableCfg(BaseModel):
     model_config = ConfigDict(extra="allow")
     units: Optional[str] = None
+    # Override del horizonte del dataset para esta variable. Hace falta cuando una
+    # variable sale por otra ruta que el resto: era5 declara lag_days: 6 (el CDS),
+    # pero swvl1 sólo existe en el mirror EDH, que actualiza una vez por mes.
+    missing_after_days: Optional[int] = None
 
 
 class DatasetCfg(BaseModel):
@@ -82,6 +86,18 @@ class DatasetCfg(BaseModel):
     start: dt.date
     end: Optional[dt.date] = None
     lag_days: int = 0
+    # Cuántos días hay que esperar antes de dar por DEFINITIVA la ausencia de un día.
+    #
+    # El ledger no puede distinguir "este día no existe" de "todavía no lo
+    # publicaron": en el momento del pedido las dos cosas se ven igual. Lo único
+    # que las separa es el tiempo. Un día que sigue sin aparecer mucho después del
+    # plazo normal de publicación es un hueco real; uno reciente puede ser sólo la
+    # fuente yendo atrasada, y marcarlo como definitivo lo congela para siempre.
+    #
+    # Sin valor -> lag_days + 30. Negativo -> nunca marcar definitivo (la ausencia
+    # se re-pregunta en cada corrida; sirve para fuentes muy atrasadas, donde el
+    # costo es un 404 barato por granule).
+    missing_after_days: Optional[int] = None
     nodata: Optional[float] = None
     tile_size_deg: Optional[int] = None
     # Ventana única [minx, miny, maxx, maxy] que se le pide a la fuente, en vez

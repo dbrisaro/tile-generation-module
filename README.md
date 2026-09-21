@@ -31,6 +31,12 @@ How it stays current:
 - A **ledger** (one JSON per variable) records which days are written and which
   do not exist at the source, so re-runs skip straight to what is missing:
   **every run is idempotent and resumable**, and a daily cron keeps it current.
+- "Does not exist at the source" is only recorded once the day is old enough that
+  the source really should have published it (`missing_after_days`, defaulting to
+  `lag_days + 30`). A recent day that is not there yet stays pending and is asked
+  for again next run. Without this, a source running late gets its unpublished
+  days frozen as permanent holes and the cron never picks them up — it keeps
+  running, reports no error, and silently stops advancing.
 
 **Why not Airflow/Kedro?** One machine, one user, state in S3, cron for
 orchestration. The stages are pure functions if an orchestrator is ever needed.
@@ -99,6 +105,11 @@ tilegen chunks --stale             # only cubes that predate the current config
 
 Also: `--overwrite`, `--workers N`, `--format cog` (uses `--bbox` instead of
 `-x/--scene`).
+
+`--retry-missing` re-asks for the days the ledger has marked as absent at the
+source, leaving what is already written alone. Use it when a source has caught
+up, or when a mark turned out to be wrong; `--overwrite` also works but ignores
+the whole ledger and re-downloads data that was already fine.
 
 ### Long backfills
 

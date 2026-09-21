@@ -38,37 +38,75 @@ ETIQUETA = {
     "chirts":    "CHIRTS-daily v1.0 · UCSB CHC · 0.05°",
     "cpc":       "CPC Global Temp V1.0 · NOAA PSL · 0.50°",
     "era5":      "ERA5 daily statistics · Copernicus · 0.25°",
+    "era5-land": "ERA5-Land daily statistics · Copernicus · 0.10° (solo tierra)",
 }
 
 # Notas editoriales: el por qué de cada fuente. Se mantienen a mano — los ledgers
 # dicen QUÉ falta, no por qué. Revisar al regenerar.
 NOTAS = {
-    "cfs": "NCEI retiró la ruta de esta fuente en agosto 2026: el árbol "
-           "<code>operational-analysis/time-series/</code> devuelve 404. Sólo hay datos de "
-           "Bolivia y quedaron congelados. Además hay 450 días marcados como «faltan en "
-           "origen» que son una misclasificación vieja y hay que limpiar antes de reintentar.",
-    "cfsr": "El dataset está configurado desde junio 2026 pero nunca se corrió: no existe el "
-            "prefijo <code>cfsr/</code> en el bucket. Es un archivo cerrado 1979–2010, así que "
-            "es un backfill de una sola vez.",
+    "cfs": "La fuente no estaba muerta: NCEI la <b>mudó</b> en agosto 2026. El árbol viejo "
+           "devuelve 404 hasta en el directorio raíz, pero deja un <code>readme.txt</code> que "
+           "apunta al object store nuevo, con el mismo archivo y el mismo layout. Corregida la "
+           "URL el 3-sep, se recuperaron los meses que se habían perdido y las tres variables "
+           "cierran parejas en 2026-03-31. Lo que sigue marcado como «faltan en origen» ahora "
+           "es cierto: NCEI mismo no tiene 2018-09, 2025-03, ni nada entre 2025-05 y hoy salvo "
+           "un 2026-03 suelto (más 2016-01 y 2021-04, sólo viento). O sea el atraso es de "
+           "ellos, no nuestro. Sigue siendo la única fuente de una sola escena: bolivia.",
+    "cfsr": "El dataset está configurado desde junio 2026 pero nunca se corrió: sigue sin "
+            "existir el prefijo <code>cfsr/</code> en el bucket. Es un archivo cerrado "
+            "1979–2010, así que es un backfill de una sola vez.",
     "chirps": "La fuente más al día del catálogo: entra completa al cron diario (las 20 escenas "
               "terrestres en ~2 minutos, porque es HTTP/GeoTIFF y no pasa por ninguna cola).",
-    "chirps-v3": "Backfill pausado a propósito el 23-jul para darle ancho de banda a CFS. Llegó "
-                 "hasta noviembre de 1992 de 46 años. <code>precip_sat</code> arranca en 2000, "
-                 "así que todavía no entró en juego.",
-    "chirts": "Backfill pausado el 22-jul. Llegó hasta 1989 de un archivo que termina en 2016 — "
-              "es el hueco más grande del catálogo: faltan 27 años en 20 escenas.",
-    "cpc": "Recién configurado (24-ago-2026), todavía sin backfill. Es la única fuente de "
-           "tmax/tmin que llega al presente: <code>chirts</code> tiene 10x más resolución pero "
-           "termina en 2016. A cambio son 0.5°, y como interpola estaciones no tiene océano — "
-           "en las escenas costeras una parte de los píxeles va a quedar en NaN siempre, y eso "
-           "es la fuente siendo honesta, no un fallo de descarga. Se lee por OPeNDAP, que "
-           "recorta del lado del servidor.",
-    "era5": "El núcleo del pipeline y lo más sano que hay: 1981 en adelante, sin huecos "
-            "interiores, y desde el 19-ago las 21 escenas entran en el cron diario, partidas en "
-            "3 grupos escalonados. El costo es el tiempo: cada escena espera 10–35 min por "
-            "variable en la cola del CDS, así que un grupo de 7 escenas pasa las 4 horas. "
-            "<code>swvl1</code> depende de las actualizaciones mensuales del mirror EDH, así que "
-            "siempre va a ir un mes atrás.",
+    "chirps-v3": "Backfill <b>terminado</b> el 11-sep-2026: 1981 al presente de la fuente en las "
+                 "20 escenas terrestres. Había estado pausado desde el 23-jul para darle ancho de "
+                 "banda a otras fuentes, y volvió a arrancar el 2-sep cuando <code>chirts</code> "
+                 "terminó. <code>precip_sat</code> arranca en 2000 porque depende de IMERG, así que "
+                 "los 19 años anteriores en blanco no son un hueco: esa serie no existe antes. "
+                 "Desde el 21-sep entra al cron diario con la misma ventana de 70 días que v2. "
+                 "Ojo con las escenas en amarillo: son huecos de 2 a 4 días sueltos, del orden de "
+                 "días que UCSB nunca publicó, no de una descarga a medias.",
+    "chirts": "Terminado el 2-sep-2026, y era el hueco más grande que tenía el catálogo: "
+              "1983–2016 completo, <code>tmax</code> y <code>tmin</code>, en las 20 escenas "
+              "terrestres y sin días sueltos. Es un archivo cerrado — no entra al cron diario "
+              "porque no hay nada nuevo que traer.",
+    "cpc": "Backfill terminado el 27-ago-2026: 1979 al presente en las 20 escenas terrestres y "
+           "sin un solo hueco. Entra al cron diario <b>recién desde el 21-sep-2026</b>: el backfill "
+           "había dejado la serie completa pero nadie pedía los días nuevos, así que estuvo tres "
+           "semanas atrasándose un día por día sin que fallara nada. Publica con 3 días de retraso "
+           "y se le pide una ventana de 45, que cubre cualquier corrida perdida. Es la única "
+           "fuente de tmax/tmin que llega al presente: <code>chirts</code> tiene 10x más "
+           "resolución pero termina en 2016. A cambio son 0.5°, y como interpola estaciones no "
+           "tiene océano — en las escenas costeras una parte de los píxeles va a quedar en NaN "
+           "siempre, y eso es la fuente siendo honesta, no un fallo de descarga. Se lee por "
+           "OPeNDAP, que recorta del lado del servidor.",
+    "era5": "El núcleo del pipeline y lo más sano que hay: <code>t2m_mean</code>, "
+            "<code>t2m_max</code>, <code>t2m_min</code>, <code>precip_sum</code> y "
+            "<code>ssrd_sum</code> están de 1981 en adelante, sin huecos interiores, en las 21 "
+            "escenas, y desde el 19-ago entran todas al cron diario partidas en 3 grupos "
+            "escalonados. El costo es el tiempo: cada escena espera 10–35 min por variable en la "
+            "cola del CDS, así que un grupo de 7 escenas pasa las 4 horas. Las dos columnas "
+            "amarillas son las que todavía no llegaron a ese estado. <code>swvl1</code> sólo "
+            "existe en el mirror EDH, que se actualiza una vez por mes, así que siempre va a "
+            "ir un par de meses atrás. Pero el 3-sep se descubrió que además estaba "
+            "<b>congelada</b>: el cron le pedía a EDH días que todavía no había publicado y "
+            "los anotaba como inexistentes, con lo cual no los volvía a pedir nunca. Corría "
+            "sin errores y no avanzaba. Arreglado en el pipeline y recuperado a mano. <code>fg10_max</code> (ráfaga máxima) "
+            "cerró su backfill el 4-sep-2026 y sí está en el cron diario. Arranca en <b>1995 por "
+            "decisión</b>, no por una falla: el blanco 1981-1994 no se pidió nunca. Las tres escenas "
+            "en amarillo son al revés — tienen días sueltos de 1981 de una prueba de humo, que es lo "
+            "que hace que el hueco figure como interior. <code>sd_mean</code>/<code>rsn_mean</code> "
+            "(nieve) se agregaron el 4-sep; en <code>patagonia</code> <code>sd_mean</code> todavía "
+            "muestra una década sin cubrir.",
+    "era5-land": "Existe por una sola razón: ERA5 no publica cobertura de nieve, y ésta es la "
+                 "única fuente que la tiene. Va a 0.1° y solo tierra, contra los 0.25° de "
+                 "<code>era5</code> — grillas distintas, por eso es un dataset aparte y no una "
+                 "variable más. El backfill 1981–2026-07 cerró el 9-sep y entró al cron diario el "
+                 "21-sep. Las 20 escenas figuran en amarillo por un hueco de agosto, no por el "
+                 "borde: al 21-sep el CDS servía septiembre completo pero de agosto sólo el 10 y "
+                 "el 11. Esos 29 días quedan anotados como <b>provisorios</b>, no como "
+                 "inexistentes, así que cada corrida los vuelve a pedir y entran solos el día que "
+                 "la fuente los publique. Por eso la ventana del cron es de 120 días y no de 16: "
+                 "un día sólo se re-pregunta mientras siga cayendo dentro de la ventana.",
 }
 
 
@@ -314,8 +352,8 @@ OUT.write_text(f"""<title>Cobertura de cubos climáticos</title>
 
   <div class="sec-h">
     <h2>Por qué cada fuente está como está</h2>
-    <p>El amarillo casi nunca significa que algo falló: significa un backfill pausado a
-    propósito, una fuente que publica con retraso, o una que se murió en el origen.</p>
+    <p>El amarillo casi nunca significa que algo falló: significa un backfill todavía en
+    marcha, una fuente que publica con retraso, o una que se murió en el origen.</p>
   </div>
   <section class="notas">{notas}</section>
 

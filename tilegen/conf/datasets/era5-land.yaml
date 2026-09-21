@@ -1,9 +1,24 @@
 name: era5-land
 version: daily-stats
 description: ERA5-Land daily statistics, 0.1° SOLO TIERRA (Copernicus CDS + mirror EDH). Grilla distinta a era5 (0.25°), por eso es un dataset aparte y no variables nuevas de era5 — igual que cfs vs cfsr.
-source: era5_cds      # near-real-time; el backfill va por el mirror con --source era5_edh
+source: era5_cds      # el backfill va por el mirror con --source era5_edh
 temporal: daily
 start: 1950-01-01
+# OJO: el CDS de este producto tiene HUECOS, no un atraso parejo, y las dos
+# cosas se ven igual desde afuera si sólo se mira la última fecha.
+#
+# Medido el 2026-09-21 pidiendo 2026-08-01..2026-09-15 en las 20 escenas: entró
+# septiembre COMPLETO (hasta el 15, que es hoy menos lag_days -> el borde está al
+# día) y de agosto sólo el 10 y el 11. Los otros 29 días de agosto no existían en
+# ese momento, idéntico en las 20 escenas.
+#
+# Por eso lag_days: 6 queda como está: describe bien el borde. Lo que tiene que
+# aguantar el hueco es la VENTANA del cron (120 días) junto con el
+# missing_after_days de abajo: un día que se pide y todavía no está queda
+# provisorio y se vuelve a pedir, pero SÓLO mientras siga cayendo dentro de la
+# ventana. Con los 16 días que usan las otras líneas de era5, agosto se saldría
+# de la ventana en una semana y esos 29 días no se pedirían nunca más — el pozo
+# de swvl1 por otro camino.
 lag_days: 6
 cds_dataset: derived-era5-land-daily-statistics
 # OJO: este derived NO publica product_type (no hay ensemble en ERA5-Land), a
